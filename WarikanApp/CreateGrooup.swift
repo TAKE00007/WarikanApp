@@ -20,30 +20,56 @@ struct CreateGrooup: View {
                         .edgesIgnoringSafeArea(.top)
                     VStack {
                         Text("グループ名")
+                            .frame(maxWidth: 350, alignment: .leading)
+
                         //入力欄
                         TextField("グループ名", text: $groupName)
-                            .textFieldStyle(.roundedBorder)
-                            .padding()
+                            .padding(15)
+                            .background(Color.white)
+                            .frame(width: 350)
+                            .padding(.bottom, 20)
+                            .clipShape(RoundedRectangle(cornerRadius: 3))
+                            .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
                         
                         Text("メンバー名")
-                        HStack {
+                            .frame(maxWidth: 350, alignment: .leading)
+                        HStack(spacing: 0) {
                             // 入力欄
                             TextField("メンバー名", text: $memberName)
-                                .textFieldStyle(.roundedBorder)
-                                .padding()
+                                .padding(15)
+                            
                             Button {
                                 print("メンバーを追加します")
                             } label: {
                                 Text("追加")
+                                    .bold()
+                                    .padding(.horizontal ,24)
+                                    .padding(.vertical, 15)
+                                    .foregroundStyle(Color.white)
+                                    .background(Color("main"))
+
                             }
                             
                         }
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                        .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
+                        .frame(width: 350)
+                        .padding(.bottom, 40)
                         
                         Button {
                             print("ボタンが押されました")
                         } label: {
                             Text("グループを作成")
+                                .bold()
+                                .padding(.horizontal, 120)
+                                .padding(.vertical, 12)
+                                .foregroundStyle(Color.white)
+                                .background(Color("main"))
+                                .cornerRadius(3)
                         }
+                        .padding(.top, 100)
+
                         
                     }
                     .padding()
