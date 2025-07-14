@@ -35,9 +35,7 @@ struct ContentView: View {
                           headline)
                     .padding(20)
                     
-                    Button {
-                        print("ボタンが押されました")
-                    } label: {
+                    NavigationLink(destination: CreateGrooup()) {
                         Text("はじめる")
                             .bold()
                             .padding(.horizontal, 140)
@@ -46,6 +44,7 @@ struct ContentView: View {
                             .background(Color.white)
                             .cornerRadius(25)
                     }
+                    
                     Spacer()
                     
                 }
