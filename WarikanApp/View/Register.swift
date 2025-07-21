@@ -84,49 +84,49 @@ struct Register: View {
                 
                 //何代を払ったか
                 HStack {
-                    Group {
-                        Text("の")
-                            .padding(5)
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        TextField("タクシー代", text: $priceName)
-                            .padding(15)
-                            .background(Color("background"))
-                            .frame(width: 200)
-                            .clipShape(RoundedRectangle(cornerRadius: 3))
-                            .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                            
-                        Text("を払って、")
-                            .padding()
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                    }
+                    Text("の")
+                        .padding(5)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+
+                    TextField("タクシー代", text: $priceName)
+                        .padding(15)
+                        .background(Color("background"))
+                        .frame(width: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                        .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
+
+                    Text("を払って、")
+                        .padding()
+                        .font(.headline)
+                        .fontWeight(.semibold)
+
                     Spacer()
                 }
                 .padding()
                 
                 HStack(spacing: 0) {
-                    Group {
-//                        //いくらかかったか
-                        Text("¥")
-                            .padding(.vertical, 15)
-                            .padding(.horizontal, 20)  // 必要に応じて調整
-                            .background(Color("back"))
-                            .clipShape(RoundedRectangle(cornerRadius: 3))
-                            .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                        TextField("4800", text: $price)
-                            .padding(.vertical, 15)
-                            .padding(.leading, 15)
-                            .background(Color("background"))
-                            .frame(width: 200)
-                            .clipShape(RoundedRectangle(cornerRadius: 3))
-                            .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                        Text("かかった。")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .padding()
+//                   //いくらかかったか
+                    Text("¥")
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 20)  // 必要に応じて調整
+                        .background(Color("back"))
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                    
+                        .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
+                    TextField("4800", text: $price)
+                        .padding(.vertical, 15)
+                        .padding(.leading, 15)
+                        .background(Color("background"))
+                        .frame(width: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                        .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
+                    
+                    Text("かかった。")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .padding()
 
-                    }
 
                     
                 }
