@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct CreateGrooup: View {
-    @State private var group: Group
-    @State private var user: User
-    @State private var users: [User]
+    @StateObject private var group = Group(groupName: "")
+    @StateObject private var user = User(userName: "")
+    @State private var users: [User] = []
     
     var body: some View {
         NavigationStack {
@@ -42,6 +42,7 @@ struct CreateGrooup: View {
                             Button {
                                 print("メンバーを追加します")
                                 users.append(user)
+                                print(users)
                             } label: {
                                 Text("追加")
                                     .bold()
@@ -58,6 +59,8 @@ struct CreateGrooup: View {
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
                         .frame(width: 350)
                         .padding(.bottom, 40)
+                        
+                        //名前一覧
                         
                         Button {
                             print("ボタンが押されました")
@@ -94,5 +97,5 @@ struct CreateGrooup: View {
 }
 
 #Preview {
-    CreateGrooup(group: Group(groupName: ""), user: User(userName: ""), users: [])
+    CreateGrooup()
 }
