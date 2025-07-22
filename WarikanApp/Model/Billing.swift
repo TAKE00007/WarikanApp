@@ -7,11 +7,19 @@
 
 import Foundation
 
-struct Billing: Identifiable {
-    var id = UUID()
+class Billing: Identifiable {
+    let id = UUID()
     var userId: Int
     var groupId: Int
     var paymentPrice: Int
     var priceTitle: String
     var createdAt = Date()
+    
+    init(userId: Int, groupId: Int, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
+        self.userId = userId
+        self.groupId = groupId
+        self.paymentPrice = paymentPrice
+        self.priceTitle = priceTitle
+        self.createdAt = createdAt
+    }
 }

@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct UserGroup {
+class UserGroup {
     var groupId: Int
     var userId: Int
+    
+    init(groupId: Int, userId: Int) {
+        self.groupId = groupId
+        self.userId = userId
+    }
 }

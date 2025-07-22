@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct CreateGrooup: View {
-    @State private var groupName = ""
-    @State private var memberName = ""
+    @StateObject private var group = Group(groupName: "")
+    @StateObject private var user = User(userName: "")
+    @State private var users: [User] = []
     
     var body: some View {
         NavigationStack {
@@ -23,7 +24,7 @@ struct CreateGrooup: View {
                             .frame(maxWidth: 350, alignment: .leading)
 
                         //入力欄
-                        TextField("グループ名", text: $groupName)
+                        TextField("グループ名", text: $group.groupName)
                             .padding(15)
                             .background(Color.white)
                             .frame(width: 350)
@@ -35,11 +36,13 @@ struct CreateGrooup: View {
                             .frame(maxWidth: 350, alignment: .leading)
                         HStack(spacing: 0) {
                             // 入力欄
-                            TextField("メンバー名", text: $memberName)
+                            TextField("メンバー名", text: $user.userName)
                                 .padding(15)
                             
                             Button {
                                 print("メンバーを追加します")
+                                users.append(user)
+                                print(users)
                             } label: {
                                 Text("追加")
                                     .bold()
@@ -56,6 +59,8 @@ struct CreateGrooup: View {
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
                         .frame(width: 350)
                         .padding(.bottom, 40)
+                        
+                        //名前一覧
                         
                         Button {
                             print("ボタンが押されました")
