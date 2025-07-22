@@ -14,4 +14,13 @@ struct Billing: Identifiable {
     var paymentPrice: Int
     var priceTitle: String
     var createdAt = Date()
+    
+    init(id: UUID = UUID(), userId: Int, groupId: Int, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
+        self.id = id
+        self.userId = userId
+        self.groupId = groupId
+        self.paymentPrice = paymentPrice
+        self.priceTitle = priceTitle
+        self.createdAt = createdAt
+    }
 }

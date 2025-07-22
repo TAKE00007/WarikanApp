@@ -10,4 +10,9 @@ import Foundation
 struct User: Identifiable {
     var id = UUID()
     var userName: String
+    
+    init(id: UUID = UUID(), userName: String) {
+        self.id = id
+        self.userName = userName
+    }
 }
