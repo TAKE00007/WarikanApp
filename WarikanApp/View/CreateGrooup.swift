@@ -94,5 +94,5 @@ struct CreateGrooup: View {
 }
 
 #Preview {
-    CreateGrooup()
+    CreateGrooup(group: Group(groupName: ""), user: User(userName: ""), users: [])
 }
