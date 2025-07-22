@@ -7,8 +7,13 @@
 
 import Foundation
 
-struct BillingParticipant: Identifiable {
-    var id = UUID()
+class BillingParticipant: Identifiable {
+    let id = UUID()
     var userId: Int
     var isShare: Bool
+    
+    init(userId: Int, isShare: Bool) {
+        self.userId = userId
+        self.isShare = isShare
+    }
 }

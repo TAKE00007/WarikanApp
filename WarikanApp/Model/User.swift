@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct User: Identifiable {
-    var id = UUID()
-    var userName: String
+class User: ObservableObject, Identifiable {
+    let id = UUID()
+    @Published var userName: String
+    
+    init(userName: String) {
+        self.userName = userName
+    }
 }
