@@ -8,11 +8,10 @@
 import Foundation
 
 class Group: ObservableObject, Identifiable {
-    var id = UUID()
-    var groupName: String
+    let id = UUID()
+    @Published var groupName: String
     
-    init(id: UUID = UUID(), groupName: String) {
-        self.id = id
+    init(groupName: String) {
         self.groupName = groupName
     }
 }
