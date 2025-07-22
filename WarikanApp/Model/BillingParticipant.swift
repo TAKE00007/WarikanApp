@@ -11,4 +11,10 @@ struct BillingParticipant: Identifiable {
     var id = UUID()
     var userId: Int
     var isShare: Bool
+    
+    init(id: UUID = UUID(), userId: Int, isShare: Bool) {
+        self.id = id
+        self.userId = userId
+        self.isShare = isShare
+    }
 }

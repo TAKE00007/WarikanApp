@@ -10,4 +10,9 @@ import Foundation
 struct Group: Identifiable {
     var id = UUID()
     var groupName: String
+    
+    init(id: UUID = UUID(), groupName: String) {
+        self.id = id
+        self.groupName = groupName
+    }
 }
