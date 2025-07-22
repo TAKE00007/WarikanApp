@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Billing: Identifiable {
+class Billing: Identifiable {
     var id = UUID()
     var userId: Int
     var groupId: Int

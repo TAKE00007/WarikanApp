@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Identifiable {
+class User: ObservableObject, Identifiable {
     var id = UUID()
     var userName: String
     
