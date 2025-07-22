@@ -8,15 +8,14 @@
 import Foundation
 
 class Billing: Identifiable {
-    var id = UUID()
+    let id = UUID()
     var userId: Int
     var groupId: Int
     var paymentPrice: Int
     var priceTitle: String
     var createdAt = Date()
     
-    init(id: UUID = UUID(), userId: Int, groupId: Int, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
-        self.id = id
+    init(userId: Int, groupId: Int, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
         self.userId = userId
         self.groupId = groupId
         self.paymentPrice = paymentPrice
