@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BillingParticipant: Identifiable {
+class BillingParticipant: Identifiable {
     var id = UUID()
     var userId: Int
     var isShare: Bool

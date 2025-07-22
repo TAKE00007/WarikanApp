@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Group: Identifiable {
+class Group: ObservableObject, Identifiable {
     var id = UUID()
     var groupName: String
     
