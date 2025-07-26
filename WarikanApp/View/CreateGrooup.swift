@@ -12,6 +12,14 @@ struct CreateGrooup: View {
     @StateObject private var user = User(userName: "")
     @State private var users: [User] = []
     
+    let columns = [
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        
+    ]
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -39,10 +47,11 @@ struct CreateGrooup: View {
                             TextField("メンバー名", text: $user.userName)
                                 .padding(15)
                             
+                            
                             Button {
-                                print("メンバーを追加します")
-                                users.append(user)
-                                print(users)
+                                let newUser = User(userName: user.userName)
+                                users.append(newUser)
+                                user.userName = ""
                             } label: {
                                 Text("追加")
                                     .bold()
@@ -61,6 +70,29 @@ struct CreateGrooup: View {
                         .padding(.bottom, 40)
                         
                         //名前一覧
+                        LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
+                            ForEach(users, id: \.id) { user in
+                                HStack(spacing: 4) {
+                                    Text(user.userName)
+                                    Button{
+                                        if let index = users.firstIndex(where: { $0.id == user.id }) {
+                                            users.remove(at: index)
+                                        }
+                                    } label: {
+                                        Image(systemName: "xmark")
+                                            .font(.system(size: 12, weight: .bold))
+                                            .foregroundStyle(Color.gray)
+                                    }
+                                }
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 10)
+                                .background(Color.white)
+                                .overlay(
+                                    Capsule().stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                                )
+                                .clipShape(Capsule())
+                            }
+                        }
                         
                         Button {
                             print("ボタンが押されました")
