@@ -70,28 +70,8 @@ struct CreateGrooup: View {
                         .padding(.bottom, 40)
                         
                         //名前一覧
+                        PreviewUserName(users: $users)
                         
-                        FlowLayout(items: users) { user in
-                            HStack(spacing: 4) {
-                                Text(user.userName)
-                                Button{
-                                    if let index = users.firstIndex(where: { $0.id == user.id }) {
-                                        users.remove(at: index)
-                                    }
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .font(.system(size: 12, weight: .bold))
-                                        .foregroundStyle(Color.gray)
-                                }
-                            }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 10)
-                            .background(Color.white)
-                            .overlay(
-                                Capsule().stroke(Color.gray.opacity(0.4), lineWidth: 1)
-                            )
-                            .clipShape(Capsule())
-                        }
                         
                         Button {
                             print("ボタンが押されました")
@@ -131,47 +111,3 @@ struct CreateGrooup: View {
     CreateGrooup()
 }
 
-struct FlowLayout<Content: View, T: Identifiable>: View {
-    var items: [T]
-    var spacing: CGFloat
-    var content: (T) -> Content
-    
-    //@ViewBuilder：クロージャの中で複数のViewを返せるようにするSwiftUIの機能
-    //@escapingの部分があまりよくわからない
-    init(items: [T], spacing: CGFloat = 8, @ViewBuilder content: @escaping (T) -> Content) {
-        self.items = items
-        self.spacing = spacing
-        self.content = content
-    }
-    
-    var body: some View {
-        GeometryReader { geometry in
-            self.generateContent(in: geometry)
-        }
-    }
-    
-    private func generateContent(in geo: GeometryProxy) -> some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-        
-        return ZStack(alignment: .topLeading) {
-            ForEach(items) { item in
-                content(item)
-                    .padding(4)
-                    .alignmentGuide(.leading, computeValue: { dimension in
-                        if abs(width - dimension.width) > geo.size.width {
-                            width = 0
-                            height -= dimension.height + spacing
-                        }
-                        let result = width
-                        width -= dimension.width + spacing
-                        return  result
-                    })
-                    .alignmentGuide(.top, computeValue: { _ in
-                        let result = height
-                        return result
-                    })
-            }
-        }
-    }
-}
