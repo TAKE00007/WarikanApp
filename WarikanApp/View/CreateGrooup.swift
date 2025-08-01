@@ -12,6 +12,14 @@ struct CreateGrooup: View {
     @StateObject private var user = User(userName: "")
     @State private var users: [User] = []
     
+    let columns = [
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
+        
+    ]
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -39,10 +47,11 @@ struct CreateGrooup: View {
                             TextField("メンバー名", text: $user.userName)
                                 .padding(15)
                             
+                            
                             Button {
-                                print("メンバーを追加します")
-                                users.append(user)
-                                print(users)
+                                let newUser = User(userName: user.userName)
+                                users.append(newUser)
+                                user.userName = ""
                             } label: {
                                 Text("追加")
                                     .bold()
@@ -61,6 +70,8 @@ struct CreateGrooup: View {
                         .padding(.bottom, 40)
                         
                         //名前一覧
+                        PreviewUserName(users: $users)
+                        
                         
                         Button {
                             print("ボタンが押されました")
@@ -99,3 +110,4 @@ struct CreateGrooup: View {
 #Preview {
     CreateGrooup()
 }
+
