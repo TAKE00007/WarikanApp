@@ -102,7 +102,7 @@ struct UpdateCreateGroupView: View {
                     .toolbarBackground(.visible, for: .navigationBar)
                 }
             }
-            .navigationBarBackButtonHidden(true)
+            .navigationBarBackButtonHidden(false)
         }
     }
 }
