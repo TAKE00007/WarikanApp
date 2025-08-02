@@ -1,13 +1,13 @@
 //
-//  Register.swift
+//  UpdateRegisterView.swift
 //  WarikanApp
 //
-//  Created by 大竹駿 on 2025/07/17.
+//  Created by 大竹駿 on 2025/08/02.
 //
 
 import SwiftUI
 
-struct Register: View {
+struct UpdateRegisterView: View {
     @State private var selectedIndex = 1
     @State private var priceName = ""
     @State private var price = ""
@@ -175,5 +175,5 @@ struct Register: View {
 }
 
 #Preview {
-    Register()
+    UpdateRegisterView()
 }
