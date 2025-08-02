@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreateGrooup: View {
+struct CreateGrooupView: View {
     @StateObject private var group = Group(groupName: "")
     @StateObject private var user = User(userName: "")
     @State private var users: [User] = []
@@ -108,6 +108,6 @@ struct CreateGrooup: View {
 }
 
 #Preview {
-    CreateGrooup()
+    CreateGrooupView()
 }
 
