@@ -72,10 +72,7 @@ struct CreateGrooupView: View {
                         //名前一覧
                         PreviewUserName(users: $users)
                         
-                        
-                        Button {
-                            print("ボタンが押されました")
-                        } label: {
+                        NavigationLink(destination: HomeView(group: group, users: users)) {
                             Text("グループを作成")
                                 .bold()
                                 .padding(.horizontal, 120)

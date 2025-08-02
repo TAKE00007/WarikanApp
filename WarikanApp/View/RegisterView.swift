@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedIndex = 1
     @State private var priceName = ""
     @State private var price = ""
     @State private var checkedStates: [Bool] = [true, true, true]
     
-    let members = ["たけ", "あおい", "かおる"]
+    let users: [User]
     
     //最大2列までのレイアウト
     let columns = [
@@ -27,16 +28,16 @@ struct RegisterView: View {
                 // 名前選択部分
                 HStack(spacing: 5) {
                     Menu {
-                        ForEach(members.indices, id: \.self) { index in
+                        ForEach(users.indices, id: \.self) { index in
                             Button(action: {
                                 selectedIndex = index
                             }) {
-                                Text(members[index])
+                                Text(users[index].userName)
                             }
                         }
                     } label: {
                         HStack {
-                            Text(members[selectedIndex])
+                            Text(users[selectedIndex].userName)
                                 .foregroundColor(Color.black) // カスタムカラー指定可
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
@@ -61,12 +62,12 @@ struct RegisterView: View {
                 
                 // 名前+チェックボックス
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
-                    ForEach(members.indices, id: \.self) { index in
+                    ForEach(users.indices, id: \.self) { index in
                         HStack {
                             Button {
-                                checkedStates[index].toggle()
+                                users[index].isPay.toggle()
                             } label: {
-                                if checkedStates[index] {
+                                if users[index].isPay {
                                     Image(systemName: "checkmark.square.fill")
                                         .foregroundColor(Color("main"))
                                 } else {
@@ -76,7 +77,7 @@ struct RegisterView: View {
                             }
                             .fontWeight(.bold)
                             .font(.title)
-                            Text(members[index])
+                            Text(users[index].userName)
                         }
                         .padding()
                     }
@@ -146,8 +147,9 @@ struct RegisterView: View {
                 }
                 .padding(.top, 40)
                 //戻るボタン
+                
                 Button {
-                    print("ボタンが押されました")
+                    dismiss()
                 } label: {
                     Text("戻る")
                         .font(.headline)
@@ -175,5 +177,5 @@ struct RegisterView: View {
 }
 
 #Preview {
-    RegisterView()
+    RegisterView(users: [User(userName: "たけ"), User(userName: "あおい"), User(userName: "かおる")])
 }
