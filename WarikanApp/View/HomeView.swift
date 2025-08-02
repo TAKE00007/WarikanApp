@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var group = Group(groupName: "北海道旅行")
-    @StateObject private var user = User(userName: "")
-    @State private var users: [User] = [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")]
+    let group: Group
+    let users: [User]
     
     var body: some View {
         NavigationStack {
             HeaderView(group: group, users: users)
             VStack {
-                NavigationLink(destination: RegisterView()) {
+                NavigationLink(destination: RegisterView(users: users)) {
                     Text("立替え記録を追加")
                         .bold()
                         .padding(.horizontal, 120)
@@ -91,5 +90,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(group: Group(groupName: "北海道旅行"), users: [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")])
 }
