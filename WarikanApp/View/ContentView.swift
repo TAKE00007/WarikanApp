@@ -35,7 +35,7 @@ struct ContentView: View {
                           headline)
                     .padding(20)
                     
-                    NavigationLink(destination: CreateGrooup()) {
+                    NavigationLink(destination: CreateGrooupView()) {
                         Text("はじめる")
                             .bold()
                             .padding(.horizontal, 140)
