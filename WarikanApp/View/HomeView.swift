@@ -10,12 +10,18 @@ import SwiftUI
 struct HomeView: View {
     let group: Group
     let users: [User]
+    @State private var billingGroupBy = BillingByGroup(billingByGroup: [])
+
     
     var body: some View {
         NavigationStack {
             HeaderView(group: group, users: users)
             VStack {
-                NavigationLink(destination: RegisterView(users: users)) {
+                NavigationLink(destination: RegisterView(
+                    groupId: group.id,
+                    billingGroupBy: $billingGroupBy,
+                    users: users)
+                ) {
                     Text("立替え記録を追加")
                         .bold()
                         .padding(.horizontal, 120)
@@ -90,5 +96,8 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(group: Group(groupName: "北海道旅行"), users: [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")])
+    HomeView(
+        group: Group(groupName: "北海道旅行"),
+        users: [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")],
+    )
 }
