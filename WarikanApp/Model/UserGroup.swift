@@ -7,9 +7,9 @@
 
 import Foundation
 
-class UserGroup {
-    var groupId: Int
-    var userId: Int
+class UserGroup: ObservableObject {
+    @Published var groupId: Int
+    @Published var userId: Int
     
     init(groupId: Int, userId: Int) {
         self.groupId = groupId
