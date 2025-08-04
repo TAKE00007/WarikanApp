@@ -10,9 +10,11 @@ import SwiftUI
 struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedIndex = 1
-    @State private var priceName = ""
-    @State private var price = ""
-    @State private var checkedStates: [Bool] = [true, true, true]
+    let groupId: UUID
+    @Binding var billingGroupBy: BillingByGroup
+    @State private var priceTitle = ""
+    @State private var paymentPrice = 0
+    @State private var userId = UUID()
     
     let users: [User]
     
@@ -31,6 +33,7 @@ struct RegisterView: View {
                         ForEach(users.indices, id: \.self) { index in
                             Button(action: {
                                 selectedIndex = index
+                                userId = users[selectedIndex].id
                             }) {
                                 Text(users[index].userName)
                             }
@@ -90,7 +93,7 @@ struct RegisterView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    TextField("タクシー代", text: $priceName)
+                    TextField("タクシー代", text: $priceTitle)
                         .padding(15)
                         .background(Color("background"))
                         .frame(width: 200)
@@ -115,7 +118,7 @@ struct RegisterView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                    TextField("4800", text: $price)
+                    TextField("4800", value: $paymentPrice, formatter: NumberFormatter())
                         .padding(.vertical, 15)
                         .padding(.leading, 15)
                         .background(Color("background"))
@@ -135,6 +138,15 @@ struct RegisterView: View {
                 
                 //登録ボタン
                 Button {
+                    let newBilling = Billing(
+                        userId: userId,
+                        groupId: groupId,
+                        paymentPrice: paymentPrice,
+                        priceTitle: priceTitle
+                    )
+                        billingGroupBy.billingByGroup.append(newBilling)
+                    priceTitle = ""
+                    paymentPrice = 0
                     print("ボタンが押されました")
                 } label: {
                     Text("登録")
@@ -176,6 +188,10 @@ struct RegisterView: View {
     }
 }
 
-#Preview {
-    RegisterView(users: [User(userName: "たけ"), User(userName: "あおい"), User(userName: "かおる")])
-}
+//#Preview {
+//    RegisterView(
+//        groupId: UUID(),
+//        billingGroupBy: [],
+//        users: [User(userName: "たけ"), User(userName: "あおい"), User(userName: "かおる")]
+//    )
+//}
