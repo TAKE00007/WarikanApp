@@ -9,13 +9,13 @@ import Foundation
 
 class Billing: Identifiable {
     let id = UUID()
-    var userId: Int
-    var groupId: Int
+    var userId: UUID
+    var groupId: UUID
     var paymentPrice: Int
     var priceTitle: String
     var createdAt = Date()
     
-    init(userId: Int, groupId: Int, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
+    init(userId: UUID, groupId: UUID, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
         self.userId = userId
         self.groupId = groupId
         self.paymentPrice = paymentPrice
