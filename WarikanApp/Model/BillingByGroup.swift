@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BillingByGroup {
+class BillingByGroup: ObservableObject {
     @Published var billingByGroup: [Billing]
     
     init(billingByGroup: [Billing]) {
