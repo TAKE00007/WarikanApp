@@ -10,7 +10,8 @@ import SwiftUI
 struct HomeView: View {
     let group: Group
     let users: [User]
-    @State private var billingGroupBy = BillingByGroup(billingByGroup: [])
+    //親が初期化したObservableObjectを保持
+    @StateObject private var billingGroupBy = BillingByGroup(billingByGroup: [])
 
     
     var body: some View {
@@ -19,7 +20,7 @@ struct HomeView: View {
             VStack {
                 NavigationLink(destination: RegisterView(
                     groupId: group.id,
-                    billingGroupBy: $billingGroupBy,
+                    billingGroupBy: billingGroupBy,
                     users: users)
                 ) {
                     Text("立替え記録を追加")
@@ -35,33 +36,36 @@ struct HomeView: View {
                 }
 
                 //支払い記録を表示
-                Button {
-                    print("ボタンが押されました")
-                } label: {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("タクシー代")
-                                .foregroundColor(Color.black)
-                            Text("たけが立替え(07/08)")
-                                .foregroundColor(Color.gray)
-                            Text("マーク")
-                        }
-                        
-                        Spacer()
-                        
-                        Text("¥4,800")
-                            .foregroundColor(Color.black)
-                            .padding()
-                        NavigationLink(destination: UpdateRegisterView()) {
-                            Image(systemName: "pencil")
-                                .foregroundColor(Color.black)
-                                .bold()
-                                .font(.system(size: 20))
-                        }
-                    }
+                ForEach(billingGroupBy.billingByGroup, id: \.id) { billing in
+                    BillingCard(billing: billing, users: users)
                 }
-                
-                Divider()
+//                Button {
+//                    print("ボタンが押されました")
+//                } label: {
+//                    HStack {
+//                        VStack(alignment: .leading) {
+//                            Text("タクシー代")
+//                                .foregroundColor(Color.black)
+//                            Text("たけが立替え(07/08)")
+//                                .foregroundColor(Color.gray)
+//                            Text("マーク")
+//                        }
+//                        
+//                        Spacer()
+//                        
+//                        Text("¥4,800")
+//                            .foregroundColor(Color.black)
+//                            .padding()
+//                        NavigationLink(destination: UpdateRegisterView()) {
+//                            Image(systemName: "pencil")
+//                                .foregroundColor(Color.black)
+//                                .bold()
+//                                .font(.system(size: 20))
+//                        }
+//                    }
+//                }
+//                
+//                Divider()
                 
                 Spacer()
                 
