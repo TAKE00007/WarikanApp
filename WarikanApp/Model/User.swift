@@ -8,11 +8,13 @@
 import Foundation
 
 class User: ObservableObject, Identifiable {
-    let id = UUID()
+    let id: UUID
     @Published var userName: String
     @Published var isPay = true
     
-    init(userName: String) {
+    init(id: UUID = UUID(), userName: String) {
+        self.id = id
         self.userName = userName
     }
 }
+
