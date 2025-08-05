@@ -11,7 +11,8 @@ struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedIndex = 1
     let groupId: UUID
-    @Binding var billingGroupBy: BillingByGroup
+    //外から受け取ったObservableObjectを監視する
+    @ObservedObject var billingGroupBy: BillingByGroup
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
     @State private var userId = UUID()
@@ -148,6 +149,7 @@ struct RegisterView: View {
                     priceTitle = ""
                     paymentPrice = 0
                     print("ボタンが押されました")
+                    dismiss()
                 } label: {
                     Text("登録")
                         .font(.headline)
