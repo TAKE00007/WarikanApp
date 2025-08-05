@@ -16,3 +16,4 @@ class User: ObservableObject, Identifiable {
         self.userName = userName
     }
 }
+
