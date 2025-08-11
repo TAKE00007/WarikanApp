@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+@available(iOS 16.0, *)
 
 struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
@@ -16,6 +17,7 @@ struct RegisterView: View {
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
     @State private var userId = UUID()
+    @Binding var billingParticipants: [BillingParticipant]
     
     let users: [User]
     
@@ -145,7 +147,15 @@ struct RegisterView: View {
                         paymentPrice: paymentPrice,
                         priceTitle: priceTitle
                     )
-                        billingGroupBy.billingByGroup.append(newBilling)
+                    for user in users {
+                        let newBillingParticipant = BillingParticipant(
+                            billingId: newBilling.id,
+                            userId: user.id,
+                            isShare: user.isPay
+                        )
+                        billingParticipants.append(newBillingParticipant)
+                    }
+                    billingGroupBy.billingByGroup.append(newBilling)
                     priceTitle = ""
                     paymentPrice = 0
                     print("ボタンが押されました")
@@ -176,16 +186,16 @@ struct RegisterView: View {
                 .padding(.top, 10)
             }
             .toolbar {
-                ToolbarItem(placement: .principal) {
+                ToolbarItemGroup(placement: .principal) {
                     Text("Walican")
                         .foregroundColor(Color.white)
                         .font(.largeTitle)
                         .fontWeight(.bold)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("main"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -12,6 +12,7 @@ struct HomeView: View {
     let users: [User]
     //親が初期化したObservableObjectを保持
     @StateObject private var billingGroupBy = BillingByGroup(billingByGroup: [])
+    @State var billingParticipants: [BillingParticipant] = []
 
     
     var body: some View {
@@ -21,6 +22,7 @@ struct HomeView: View {
                 NavigationLink(destination: RegisterView(
                     groupId: group.id,
                     billingGroupBy: billingGroupBy,
+                    billingParticipants: $billingParticipants,
                     users: users)
                 ) {
                     Text("立替え記録を追加")

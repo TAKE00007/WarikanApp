@@ -10,10 +10,11 @@ import Foundation
 class BillingParticipant: Identifiable {
     let billingId: UUID
     var userId: UUID
-    var isShare: Bool = true
+    var isShare: Bool
     
-    init(billingId: UUID, userId: UUID) {
+    init(billingId: UUID, userId: UUID, isShare: Bool) {
         self.billingId = billingId
         self.userId = userId
+        self.isShare = isShare
     }
 }
