@@ -8,6 +8,7 @@
    uuid = "CEDA38D1-25BB-4918-81DB-170E7936F94C"
    type = "1"
    version = "2.0">
+<<<<<<< HEAD
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
@@ -27,4 +28,6 @@
       </BreakpointProxy>
    </Breakpoints>
 >>>>>>> 5c3eead (登録画面で誰が払ったかを保存できるようにした)
+=======
+>>>>>>> 99f176d (設定ファイル)
 </Bucket>
