@@ -11,6 +11,7 @@ class User: ObservableObject, Identifiable {
     let id: UUID
     @Published var userName: String
     @Published var isPay = true
+    @Published var payPrice = 0
     
     init(id: UUID = UUID(), userName: String) {
         self.id = id
