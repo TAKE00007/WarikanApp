@@ -10,9 +10,22 @@ import SwiftUI
 struct HomeView: View {
     let group: Group
     let users: [User]
-    //親が初期化したObservableObjectを保持
-    @StateObject private var billingGroupBy = BillingByGroup(billingByGroup: [])
+    
+    @State var billings: [Billing] = []
     @State var billingParticipants: [BillingParticipant] = []
+    
+    var warikanResults: [PaymentResult] {
+        let calc = WarikanCalculate(
+            billings: billings,
+            users: users
+        )
+        return calc.warikanCalculate(
+            billings: billings,
+            users: users,
+            billingParticipants: billingParticipants
+        )
+    }
+   
 
     
     var body: some View {
@@ -21,7 +34,7 @@ struct HomeView: View {
             VStack {
                 NavigationLink(destination: RegisterView(
                     groupId: group.id,
-                    billingGroupBy: billingGroupBy,
+                    billings: $billings,
                     billingParticipants: $billingParticipants,
                     users: users)
                 ) {
@@ -38,38 +51,26 @@ struct HomeView: View {
                 }
 
                 //支払い記録を表示
-                ForEach(billingGroupBy.billingByGroup, id: \.id) { billing in
+                ForEach(billings, id: \.id) { billing in
                     BillingCard(billing: billing, users: users)
                 }
-//                Button {
-//                    print("ボタンが押されました")
-//                } label: {
-//                    HStack {
-//                        VStack(alignment: .leading) {
-//                            Text("タクシー代")
-//                                .foregroundColor(Color.black)
-//                            Text("たけが立替え(07/08)")
-//                                .foregroundColor(Color.gray)
-//                            Text("マーク")
-//                        }
-//                        
-//                        Spacer()
-//                        
-//                        Text("¥4,800")
-//                            .foregroundColor(Color.black)
-//                            .padding()
-//                        NavigationLink(destination: UpdateRegisterView()) {
-//                            Image(systemName: "pencil")
-//                                .foregroundColor(Color.black)
-//                                .bold()
-//                                .font(.system(size: 20))
-//                        }
-//                    }
-//                }
-//                
-//                Divider()
                 
                 Spacer()
+                
+                VStack {
+                    HStack {
+                        Text("精算方法")
+                            .bold()
+                            .padding()
+                        Spacer()
+                        Text("共有用にコピー")
+                            .padding()
+                    }
+                    // 支払うべき人一覧を表示
+                    ForEach(warikanResults) { result in
+                        payToCard(sendUserName: result.from.userName, giveUserName: result.to.userName, amount: result.amount)
+                    }
+                }
                 
                 Button {
                     print("ボタンが押されました")

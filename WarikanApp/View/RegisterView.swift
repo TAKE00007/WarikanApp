@@ -10,13 +10,13 @@ import SwiftUI
 
 struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedIndex = 1
     let groupId: UUID
-    //外から受け取ったObservableObjectを監視する
-    @ObservedObject var billingGroupBy: BillingByGroup
+
+    @State private var selectedIndex = 1
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
     @State private var userId = UUID()
+    @Binding var billings: [Billing]
     @Binding var billingParticipants: [BillingParticipant]
     
     let users: [User]
@@ -155,7 +155,7 @@ struct RegisterView: View {
                         )
                         billingParticipants.append(newBillingParticipant)
                     }
-                    billingGroupBy.billingByGroup.append(newBilling)
+                    billings.append(newBilling)
                     priceTitle = ""
                     paymentPrice = 0
                     print("ボタンが押されました")
