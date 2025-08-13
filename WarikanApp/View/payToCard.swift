@@ -8,36 +8,21 @@
 import SwiftUI
 
 struct payToCard: View {
+    let sendUserName: String
+    let giveUserName: String
+    let amount: Int
     var body: some View {
-        VStack {
-            HStack {
-                Text("精算方法")
-                    .bold()
-                    .padding()
-                Spacer()
-                Text("共有用にコピー")
-                    .padding()
-            }
-            HStack {
-                Text("あおい" + "→" + "たけ")
-                    .padding()
-                Spacer()
-                Text("¥1,600")
-                    .padding()
-            }
-            Divider()
-            HStack {
-                Text("かおる" + "→" + "たけ")
-                    .padding()
-                Spacer()
-                Text("¥1,600")
-                    .padding()
-            }
-
+        HStack {
+            Text("\(sendUserName)" + "→" + "\(giveUserName)")
+                .padding()
+            Spacer()
+            Text("¥\(amount)")
+                .padding()
         }
+        Divider()
     }
 }
 
-#Preview {
-    payToCard()
-}
+//#Preview {
+//    payToCard()
+//}
