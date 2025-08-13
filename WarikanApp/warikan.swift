@@ -38,8 +38,22 @@ private let billingParticipants = [billingParticipant_1_1, billingParticipant_1_
 
 // 全体の支払い金額を求める
 struct WarikanCalculate {
-    let billingByGroup: BillingByGroup
+    let billings: [Billing]
     let users: [User]
+    
+    func warikanCalculate(billings: [Billing], users: [User], billingParticipants: [BillingParticipant]) -> [PaymentResult] {
+        // まず全員のpayPriceを0にする
+            for user in users {
+                user.payPrice = 0
+            }
+        
+        for billing in billings {
+            calculatePriceByPerson(users: users, billing: billing, billingParticipants: billingParticipants)
+        }
+        let result = givePrice(users: users)
+        
+        return result
+    }
     
     
     
@@ -57,32 +71,29 @@ struct WarikanCalculate {
         //billingIdと同じでかつisShareがtrueの人を探す
         var payNum = 0
         for billingParticipant in billingParticipants {
-            if billing.id == billingParticipant.billingId || billingParticipant.isShare {
+            if billing.id == billingParticipant.billingId && billingParticipant.isShare {
                 payNum += 1
             }
         }
         
+        guard payNum > 0 else { return }
+        
         //一人当たりの金額を出す
         let priceByPerson = billing.paymentPrice / payNum
+        
+        //参加者ごとに金額計算
         for billingParticipant in billingParticipants {
-            if billing.id == billingParticipant.billingId || billingParticipant.isShare {
+            if billing.id == billingParticipant.billingId && billingParticipant.isShare {
                 // 払った人はuser.payPriceをpriceByPersonだけーにする
-                if billingParticipant.userId == billing.userId {
-                    
-                    //後からお金を受け取る人は一人当たりの金額-合計の値段をもつ
-                    if let payUser = users.first(where: { $0.id == billing.userId }) {
-                        payUser.payPrice = priceByPerson - billing.paymentPrice
+                if let user = users.first(where: { $0.id == billingParticipant.userId }) {
+                    if billingParticipant.userId == billing.userId {
+                        user.payPrice += (priceByPerson - billing.paymentPrice)
                     } else {
-                        print("該当ユーザーが見つかりません")
+                        user.payPrice += priceByPerson
                     }
                 } else {
-                    if let payUser = users.first(where: { $0.id == billing.userId }) {
-                        payUser.payPrice += priceByPerson
-                    } else {
-                        print("該当ユーザーが見つかりません")
-                    }
+                    print("該当ユーザーが見つかりません")
                 }
-                
             }
         }
     }
@@ -107,7 +118,7 @@ struct WarikanCalculate {
             
             let payment = min(needAmount, giveAmount)
             
-            results.append(PaymentResult(from: giver, to: receiver, amout: payment))
+            results.append(PaymentResult(from: giver, to: receiver, amount: payment))
             
             //残高更新
             needAmount -= payment
@@ -127,10 +138,4 @@ struct WarikanCalculate {
         
         return results
     }
-}
-
-struct PaymentResult {
-    let from: User
-    let to: User
-    let amout: Int
 }
