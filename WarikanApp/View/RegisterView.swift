@@ -16,10 +16,10 @@ struct RegisterView: View {
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
     @State private var userId = UUID()
+    @Binding var users: [User]
     @Binding var billings: [Billing]
     @Binding var billingParticipants: [BillingParticipant]
     
-    let users: [User]
     
     //最大2列までのレイアウト
     let columns = [
