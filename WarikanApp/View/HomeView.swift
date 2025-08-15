@@ -25,8 +25,6 @@ struct HomeView: View {
             billingParticipants: billingParticipants
         )
     }
-   
-
     
     var body: some View {
         NavigationStack {
@@ -108,4 +106,13 @@ struct HomeView: View {
         group: Group(groupName: "北海道旅行"),
         users: [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")],
     )
+}
+
+extension DateFormatter {
+    static let monthDay: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.dateFormat = "MM/dd"
+        return formatter
+    } ()
 }

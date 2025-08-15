@@ -21,7 +21,7 @@ struct BillingCard: View {
                     Text(billing.priceTitle)
                         .foregroundColor(Color.black)
                     // TODO: createdAtのformatterをmm/ddにする
-                    Text("\(getUserName(by: billing.userId, from: users) ?? "不明")が立替え(\(billing.createdAt)")
+                    Text("\(getUserName(by: billing.userId, from: users) ?? "不明")が立替え(\(DateFormatter.monthDay.string(from: billing.createdAt)))")
                         .foregroundColor(Color.gray)
                     Text("マーク")
                 }
