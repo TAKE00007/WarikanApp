@@ -72,7 +72,7 @@ struct CreateGrooupView: View {
                         //名前一覧
                         PreviewUserName(users: $users)
                         
-                        NavigationLink(destination: HomeView(group: group, users: users)) {
+                        NavigationLink(destination: HomeView(group: group, users: $users)) {
                             Text("グループを作成")
                                 .bold()
                                 .padding(.horizontal, 120)

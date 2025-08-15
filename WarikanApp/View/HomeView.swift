@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     let group: Group
-    let users: [User]
+    @Binding var users: [User]
     
     @State var billings: [Billing] = []
     @State var billingParticipants: [BillingParticipant] = []
@@ -32,10 +32,10 @@ struct HomeView: View {
             VStack {
                 NavigationLink(destination: RegisterView(
                     groupId: group.id,
+                    users: $users,
                     billings: $billings,
-                    billingParticipants: $billingParticipants,
-                    users: users)
-                ) {
+                    billingParticipants: $billingParticipants)
+                ){
                     Text("立替え記録を追加")
                         .bold()
                         .padding(.horizontal, 120)
@@ -101,12 +101,11 @@ struct HomeView: View {
     }
 }
 
-#Preview {
-    HomeView(
-        group: Group(groupName: "北海道旅行"),
-        users: [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")],
-    )
-}
+//#Preview {
+//    HomeView(
+//        group: Group(groupName: "北海道旅行")
+//    )
+//}
 
 extension DateFormatter {
     static let monthDay: DateFormatter = {
