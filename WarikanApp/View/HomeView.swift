@@ -25,8 +25,6 @@ struct HomeView: View {
             billingParticipants: billingParticipants
         )
     }
-   
-
     
     var body: some View {
         NavigationStack {
@@ -49,27 +47,28 @@ struct HomeView: View {
                                 .stroke(Color("main"), lineWidth: 2)
                         )
                 }
-
-                //支払い記録を表示
-                ForEach(billings, id: \.id) { billing in
-                    BillingCard(billing: billing, users: users)
-                }
                 
-                Spacer()
-                
-                VStack {
-                    HStack {
-                        Text("精算方法")
-                            .bold()
-                            .padding()
-                        Spacer()
-                        Text("共有用にコピー")
-                            .padding()
+                ScrollView {
+                    //支払い記録を表示
+                    ForEach(billings, id: \.id) { billing in
+                        BillingCard(billing: billing, users: users)
                     }
-                    // 支払うべき人一覧を表示
-                    ForEach(warikanResults) { result in
-                        payToCard(sendUserName: result.from.userName, giveUserName: result.to.userName, amount: result.amount)
+                    
+                    VStack {
+                        HStack {
+                            Text("精算方法")
+                                .bold()
+                                .padding()
+                            Spacer()
+                            Text("共有用にコピー")
+                                .padding()
+                        }
+                        // 支払うべき人一覧を表示
+                        ForEach(warikanResults) { result in
+                            payToCard(sendUserName: result.from.userName, giveUserName: result.to.userName, amount: result.amount)
+                        }
                     }
+                    .padding(.top, 100)
                 }
                 
                 Button {
@@ -107,4 +106,13 @@ struct HomeView: View {
         group: Group(groupName: "北海道旅行"),
         users: [User(userName: "たけ"),User(userName: "あおい"), User(userName: "かおる")],
     )
+}
+
+extension DateFormatter {
+    static let monthDay: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.dateFormat = "MM/dd"
+        return formatter
+    } ()
 }
