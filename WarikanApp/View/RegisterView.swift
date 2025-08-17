@@ -68,24 +68,8 @@ struct RegisterView: View {
                 
                 // 名前+チェックボックス
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
-                    ForEach(users.indices, id: \.self) { index in
-                        HStack {
-                            Button {
-                                users[index].isPay.toggle()
-                            } label: {
-                                if users[index].isPay {
-                                    Image(systemName: "checkmark.square.fill")
-                                        .foregroundColor(Color("main"))
-                                } else {
-                                    Image(systemName: "square")
-                                        .foregroundColor(Color("back"))
-                                }
-                            }
-                            .fontWeight(.bold)
-                            .font(.title)
-                            Text(users[index].userName)
-                        }
-                        .padding()
+                    ForEach(users) { user in
+                        UserRow(user: user)
                     }
                 }
                 
@@ -197,6 +181,30 @@ struct RegisterView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+}
+
+struct UserRow: View {
+    @ObservedObject var user: User
+    
+    var body: some View {
+        HStack {
+            Button {
+                user.isPay.toggle()
+            } label: {
+                if user.isPay {
+                    Image(systemName: "checkmark.square.fill")
+                        .foregroundColor(Color("main"))
+                } else {
+                    Image(systemName: "square")
+                        .foregroundColor(Color("back"))
+                }
+            }
+            .fontWeight(.bold)
+            .font(.title)
+            Text(user.userName)
+        }
+        .padding()
     }
 }
 
