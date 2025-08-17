@@ -12,10 +12,10 @@ struct RegisterView: View {
     @Environment(\.dismiss) private var dismiss
     let groupId: UUID
 
-    @State private var selectedIndex = 1
+    @State private var selectedIndex = 0
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
-    @State private var userId = UUID()
+    @State private var userId: UUID?
     @Binding var users: [User]
     @Binding var billings: [Billing]
     @Binding var billingParticipants: [BillingParticipant]
@@ -68,24 +68,8 @@ struct RegisterView: View {
                 
                 // 名前+チェックボックス
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
-                    ForEach(users.indices, id: \.self) { index in
-                        HStack {
-                            Button {
-                                users[index].isPay.toggle()
-                            } label: {
-                                if users[index].isPay {
-                                    Image(systemName: "checkmark.square.fill")
-                                        .foregroundColor(Color("main"))
-                                } else {
-                                    Image(systemName: "square")
-                                        .foregroundColor(Color("back"))
-                                }
-                            }
-                            .fontWeight(.bold)
-                            .font(.title)
-                            Text(users[index].userName)
-                        }
-                        .padding()
+                    ForEach(users) { user in
+                        UserRow(user: user)
                     }
                 }
                 
@@ -142,7 +126,7 @@ struct RegisterView: View {
                 //登録ボタン
                 Button {
                     let newBilling = Billing(
-                        userId: userId,
+                        userId: userId!,
                         groupId: groupId,
                         paymentPrice: paymentPrice,
                         priceTitle: priceTitle
@@ -185,6 +169,12 @@ struct RegisterView: View {
                 }
                 .padding(.top, 10)
             }
+            .onAppear {
+                //usersが渡された後に初期値を代入
+                if !users.isEmpty {
+                    userId = users[selectedIndex].id
+                }
+            }
             .toolbar {
                 ToolbarItemGroup(placement: .principal) {
                     Text("Walican")
@@ -197,6 +187,30 @@ struct RegisterView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+}
+
+struct UserRow: View {
+    @ObservedObject var user: User
+    
+    var body: some View {
+        HStack {
+            Button {
+                user.isPay.toggle()
+            } label: {
+                if user.isPay {
+                    Image(systemName: "checkmark.square.fill")
+                        .foregroundColor(Color("main"))
+                } else {
+                    Image(systemName: "square")
+                        .foregroundColor(Color("back"))
+                }
+            }
+            .fontWeight(.bold)
+            .font(.title)
+            Text(user.userName)
+        }
+        .padding()
     }
 }
 
