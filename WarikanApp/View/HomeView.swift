@@ -50,8 +50,8 @@ struct HomeView: View {
                 
                 ScrollView {
                     //支払い記録を表示
-                    ForEach(billings, id: \.id) { billing in
-                        BillingCard(billing: billing, users: users)
+                    ForEach($billings, id: \.id) { $billing in
+                        BillingCard(billing: $billing, billings: $billings, billingParticipants: $billingParticipants, users: users)
                     }
                     
                     VStack {
@@ -95,6 +95,7 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("main"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarBackButtonHidden(true)
         }
 
 
