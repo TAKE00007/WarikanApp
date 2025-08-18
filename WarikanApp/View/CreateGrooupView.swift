@@ -10,7 +10,9 @@ import SwiftUI
 struct CreateGrooupView: View {
     @StateObject private var group = Group(groupName: "")
     @StateObject private var user = User(userName: "")
+    @State private var userName: String = ""
     @State private var users: [User] = []
+    @FocusState private var isUserNameFocused: Bool
     
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
@@ -44,14 +46,18 @@ struct CreateGrooupView: View {
                             .frame(maxWidth: 350, alignment: .leading)
                         HStack(spacing: 0) {
                             // 入力欄
-                            TextField("メンバー名", text: $user.userName)
+                            TextField("メンバー名", text: $userName)
                                 .padding(15)
+                                .focused($isUserNameFocused)
                             
                             
                             Button {
-                                let newUser = User(userName: user.userName)
-                                users.append(newUser)
-                                user.userName = ""
+                                if !userName.isEmpty {
+                                    let newUser = User(userName: userName)
+                                    users.append(newUser)
+                                    userName = ""
+                                    isUserNameFocused = false
+                                }
                             } label: {
                                 Text("追加")
                                     .bold()
