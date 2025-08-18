@@ -44,7 +44,7 @@ struct RegisterView: View {
                     } label: {
                         HStack {
                             Text(users[selectedIndex].userName)
-                                .foregroundColor(Color.black) // カスタムカラー指定可
+                                .foregroundColor(Color.black)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
                                 .foregroundColor(Color.black)
@@ -155,7 +155,6 @@ struct RegisterView: View {
                 }
                 .padding(.top, 40)
                 //戻るボタン
-                
                 Button {
                     dismiss()
                 } label: {
