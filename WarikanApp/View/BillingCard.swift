@@ -9,7 +9,9 @@ import SwiftUI
 
 struct BillingCard: View {
     
-    let billing: Billing
+    @Binding var  billing: Billing
+    @Binding var billings: [Billing]
+    @Binding var billingParticipants: [BillingParticipant]
     let users: [User]
     
     var body: some View {
@@ -20,7 +22,6 @@ struct BillingCard: View {
                 VStack(alignment: .leading) {
                     Text(billing.priceTitle)
                         .foregroundColor(Color.black)
-                    // TODO: createdAtのformatterをmm/ddにする
                     Text("\(getUserName(by: billing.userId, from: users) ?? "不明")が立替え(\(DateFormatter.monthDay.string(from: billing.createdAt)))")
                         .foregroundColor(Color.gray)
                     Text("マーク")
@@ -31,7 +32,7 @@ struct BillingCard: View {
                 Text("¥\(billing.paymentPrice)")
                     .foregroundColor(Color.black)
                     .padding()
-                NavigationLink(destination: UpdateRegisterView()) {
+                NavigationLink(destination: UpdateRegisterView(users: users, billing: $billing, billings: $billings, billingParticipants: $billingParticipants)) {
                     Image(systemName: "pencil")
                         .foregroundColor(Color.black)
                         .bold()
