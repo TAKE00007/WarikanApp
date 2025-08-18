@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct UpdateRegisterView: View {
-    @State private var selectedIndex = 1
-    @State private var priceName = ""
-    @State private var price = ""
-    @State private var checkedStates: [Bool] = [true, true, true]
+    @Environment(\.dismiss) private var dismiss
     
-    let members = ["たけ", "あおい", "かおる"]
+    @State private var selectedIndex = 0
+    @State private var userId: UUID?
+    let users: [User]
+    @Binding var billing: Billing
+    @Binding var billings: [Billing]
+    @Binding var billingParticipants: [BillingParticipant]
+    
     
     //最大2列までのレイアウト
     let columns = [
@@ -27,17 +30,18 @@ struct UpdateRegisterView: View {
                 // 名前選択部分
                 HStack(spacing: 5) {
                     Menu {
-                        ForEach(members.indices, id: \.self) { index in
+                        ForEach(users.indices, id: \.self) { index in
                             Button(action: {
                                 selectedIndex = index
+                                userId = users[selectedIndex].id
                             }) {
-                                Text(members[index])
+                                Text(users[index].userName)
                             }
                         }
                     } label: {
                         HStack {
-                            Text(members[selectedIndex])
-                                .foregroundColor(Color.black) // カスタムカラー指定可
+                            Text(users[selectedIndex].userName)
+                                .foregroundColor(Color.black)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
                                 .foregroundColor(Color.black)
@@ -61,24 +65,8 @@ struct UpdateRegisterView: View {
                 
                 // 名前+チェックボックス
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
-                    ForEach(members.indices, id: \.self) { index in
-                        HStack {
-                            Button {
-                                checkedStates[index].toggle()
-                            } label: {
-                                if checkedStates[index] {
-                                    Image(systemName: "checkmark.square.fill")
-                                        .foregroundColor(Color("main"))
-                                } else {
-                                    Image(systemName: "square")
-                                        .foregroundColor(Color("back"))
-                                }
-                            }
-                            .fontWeight(.bold)
-                            .font(.title)
-                            Text(members[index])
-                        }
-                        .padding()
+                    ForEach(users) { user in
+                        UserRow(user: user)
                     }
                 }
                 
@@ -89,7 +77,7 @@ struct UpdateRegisterView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    TextField("タクシー代", text: $priceName)
+                    TextField("\(billing.priceTitle)", text: $billing.priceTitle)
                         .padding(15)
                         .background(Color("background"))
                         .frame(width: 200)
@@ -114,7 +102,7 @@ struct UpdateRegisterView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                    TextField("4800", text: $price)
+                    TextField("\(billing.paymentPrice)", value: $billing.paymentPrice, formatter: NumberFormatter())
                         .padding(.vertical, 15)
                         .padding(.leading, 15)
                         .background(Color("background"))
@@ -134,7 +122,13 @@ struct UpdateRegisterView: View {
                 
                 //登録ボタン
                 Button {
+                    for billingParticipant in billingParticipants {
+                        if billingParticipant.billingId == billing.id {
+                            billingParticipant.isShare = users.first { $0.id == billingParticipant.userId }?.isPay ?? true
+                        }
+                    }
                     print("ボタンが押されました")
+                    dismiss()
                 } label: {
                     Text("登録")
                         .font(.headline)
@@ -147,7 +141,7 @@ struct UpdateRegisterView: View {
                 .padding(.top, 40)
                 //戻るボタン
                 Button {
-                    print("ボタンが押されました")
+                    dismiss()
                 } label: {
                     Text("戻る")
                         .font(.headline)
@@ -158,6 +152,12 @@ struct UpdateRegisterView: View {
                         .cornerRadius(3)
                 }
                 .padding(.top, 10)
+            }
+            .onAppear {
+                //usersが渡された後に初期値を代入
+                if !users.isEmpty {
+                    userId = billing.userId
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -174,6 +174,6 @@ struct UpdateRegisterView: View {
     }
 }
 
-#Preview {
-    UpdateRegisterView()
-}
+//#Preview {
+//    UpdateRegisterView()
+//}
