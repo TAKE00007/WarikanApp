@@ -12,6 +12,8 @@ struct UpdateRegisterView: View {
     
     @State private var selectedIndex = 0
     @State private var userId: UUID?
+    @State private var paymentTitle = ""
+    @State private var paymentText = ""
     let users: [User]
     @Binding var billing: Billing
     @Binding var billings: [Billing]
@@ -77,7 +79,7 @@ struct UpdateRegisterView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    TextField("\(billing.priceTitle)", text: $billing.priceTitle)
+                    TextField(paymentTitle, text: $paymentTitle)
                         .padding(15)
                         .background(Color("background"))
                         .frame(width: 200)
@@ -102,7 +104,7 @@ struct UpdateRegisterView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                    TextField("\(billing.paymentPrice)", value: $billing.paymentPrice, formatter: NumberFormatter())
+                    TextField(paymentText, text: $paymentText)
                         .padding(.vertical, 15)
                         .padding(.leading, 15)
                         .background(Color("background"))
@@ -127,6 +129,10 @@ struct UpdateRegisterView: View {
                             billingParticipant.isShare = users.first { $0.id == billingParticipant.userId }?.isPay ?? true
                         }
                     }
+                    billing.priceTitle = paymentTitle
+                    billing.paymentPrice = Int(paymentText) ?? billing.paymentPrice
+                    billing.userId = userId!
+                    billing.createdAt = Date()
                     print("ボタンが押されました")
                     dismiss()
                 } label: {
@@ -154,9 +160,12 @@ struct UpdateRegisterView: View {
                 .padding(.top, 10)
             }
             .onAppear {
-                //usersが渡された後に初期値を代入
-                if !users.isEmpty {
-                    userId = billing.userId
+                paymentTitle = billing.priceTitle
+                paymentText = String(billing.paymentPrice)
+                
+                if let index = users.firstIndex(where: { $0.id == billing.userId }) {
+                    selectedIndex = index
+                    userId = users[index].id
                 }
             }
             .toolbar {
