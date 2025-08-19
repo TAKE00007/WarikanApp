@@ -7,13 +7,13 @@
 
 import Foundation
 
-class Billing: Identifiable {
+class Billing: ObservableObject,Identifiable {
     let id = UUID()
-    var userId: UUID
-    var groupId: UUID
-    var paymentPrice: Int
-    var priceTitle: String
-    var createdAt = Date()
+    @Published var userId: UUID
+    @Published var groupId: UUID
+    @Published var paymentPrice: Int
+    @Published var priceTitle: String
+    @Published var createdAt = Date()
     
     init(userId: UUID, groupId: UUID, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
         self.userId = userId
