@@ -32,7 +32,14 @@ struct BillingCard: View {
                 Text("¥\(billing.paymentPrice)")
                     .foregroundColor(Color.black)
                     .padding()
-                NavigationLink(destination: UpdateRegisterView(users: users, billing: $billing, billings: $billings, billingParticipants: $billingParticipants)) {
+                NavigationLink(
+                    destination: UpdateRegisterView(
+                        users: users,
+                        billing: $billing,
+                        billings: $billings,
+                        billingParticipants: $billingParticipants
+                    )
+                ) {
                     Image(systemName: "pencil")
                         .foregroundColor(Color.black)
                         .bold()

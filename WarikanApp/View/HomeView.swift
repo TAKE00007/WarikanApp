@@ -50,7 +50,7 @@ struct HomeView: View {
                 
                 ScrollView {
                     //支払い記録を表示
-                    ForEach($billings, id: \.id) { $billing in
+                    ForEach($billings) { $billing in
                         BillingCard(billing: $billing, billings: $billings, billingParticipants: $billingParticipants, users: users)
                     }
                     
