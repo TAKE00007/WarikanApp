@@ -24,7 +24,23 @@ struct BillingCard: View {
                         .foregroundColor(Color.black)
                     Text("\(getUserName(by: billing.userId, from: users) ?? "不明")が立替え(\(DateFormatter.monthDay.string(from: billing.createdAt)))")
                         .foregroundColor(Color.gray)
-                    Text("マーク")
+                    HStack {
+                        ForEach(billingParticipants) { billingParticipant in
+                            if (billing.id == billingParticipant.billingId) {
+                                if let user = users.first(where: { $0.id == billingParticipant.userId }) {
+                                    let name = user.userName.prefix(1)
+                                    ZStack {
+                                        Circle()
+                                            .stroke(Color.blue, lineWidth: 2)
+                                            .frame(width: 25, height: 25)
+                                        
+                                        Text("\(name)")
+                                            .foregroundColor(Color.gray)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 
                 Spacer()
