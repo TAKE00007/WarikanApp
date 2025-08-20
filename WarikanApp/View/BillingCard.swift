@@ -29,8 +29,14 @@ struct BillingCard: View {
                             if (billing.id == billingParticipant.billingId) {
                                 if let user = users.first(where: { $0.id == billingParticipant.userId }) {
                                     let name = user.userName.prefix(1)
-                                    Text("\(name)")
-                                        .foregroundColor(Color.gray)
+                                    ZStack {
+                                        Circle()
+                                            .stroke(Color.blue, lineWidth: 2)
+                                            .frame(width: 25, height: 25)
+                                        
+                                        Text("\(name)")
+                                            .foregroundColor(Color.gray)
+                                    }
                                 }
                             }
                         }
