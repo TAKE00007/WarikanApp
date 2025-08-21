@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct UpdateCreateGroupView: View {
+    @Environment(\.dismiss) private var dismiss
     @Binding var group: Group
     @Binding var users: [User]
     @StateObject private var user = User(userName: "")
@@ -74,9 +75,9 @@ struct UpdateCreateGroupView: View {
                         
                         
                         Button {
-                            print("ボタンが押されました")
+                            dismiss()
                         } label: {
-                            Text("グループを作成")
+                            Text("更新")
                                 .bold()
                                 .padding(.horizontal, 120)
                                 .padding(.vertical, 12)
