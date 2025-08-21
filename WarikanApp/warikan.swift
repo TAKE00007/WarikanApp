@@ -7,35 +7,6 @@
 
 import Foundation
 
-private let user1 = User(userName: "take")
-private let user2 = User(userName: "aoi")
-private let user3 = User(userName: "kaoru")
-private let group = Group(groupName: "北海道旅行")
-private let users: [User] = [user1, user2, user3]
-
-private let billing1 = Billing(userId: user1.id, groupId: group.id, paymentPrice: 1000, priceTitle: "タクシー")
-private let billing2 = Billing(userId: user2.id, groupId: group.id, paymentPrice: 5000, priceTitle: "駐車場代")
-private let billing3 = Billing(userId: user3.id, groupId: group.id, paymentPrice: 3000, priceTitle: "車代")
-
-private let billingParticipant_1_1 = BillingParticipant(billingId: billing1.id, userId: user1.id, isShare: true)
-private let billingParticipant_1_2 = BillingParticipant(billingId: billing1.id, userId: user2.id, isShare: true)
-private let billingParticipant_1_3 = BillingParticipant(billingId: billing1.id, userId: user3.id, isShare: true)
-
-private let billingParticipant_2_1 = BillingParticipant(billingId: billing2.id, userId: user1.id, isShare: true)
-private let billingParticipant_2_2 = BillingParticipant(billingId: billing2.id, userId: user2.id, isShare: true)
-private let billingParticipant_2_3 = BillingParticipant(billingId: billing2.id, userId: user3.id, isShare: true)
-
-private let billingParticipant_3_1 = BillingParticipant(billingId: billing3.id, userId: user1.id, isShare: true)
-private let billingParticipant_3_2 = BillingParticipant(billingId: billing3.id, userId: user2.id, isShare: true)
-private let billingParticipant_3_3 = BillingParticipant(billingId: billing3.id, userId: user3.id, isShare: true)
-
-
-private let billingByGroup = BillingByGroup(billingByGroup: [billing1, billing2, billing3])
-private let billingParticipants = [billingParticipant_1_1, billingParticipant_1_2, billingParticipant_1_3,
-                                   billingParticipant_2_1, billingParticipant_2_2, billingParticipant_2_3,
-                                   billingParticipant_3_1, billingParticipant_3_2, billingParticipant_3_3,
-                                   ]
-
 // 全体の支払い金額を求める
 struct WarikanCalculate {
     let billings: [Billing]
@@ -53,18 +24,6 @@ struct WarikanCalculate {
         let result = givePrice(users: users)
         
         return result
-    }
-    
-    
-    
-    
-    func calculateTotalAmount(billingByGroup: BillingByGroup) -> Int {
-        var totalAmount = 0
-        billingByGroup.billingByGroup.forEach { billing in
-            totalAmount += billing.paymentPrice
-        }
-        
-        return totalAmount
     }
     
     func calculatePriceByPerson(users: [User], billing: Billing, billingParticipants: [BillingParticipant]) {
