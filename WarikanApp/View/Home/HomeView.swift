@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    let group: Group
+    @Binding var group: Group
     @Binding var users: [User]
     
     @State var billings: [Billing] = []
@@ -28,7 +28,7 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            HeaderView(group: group, users: users)
+            HeaderView(group: $group, users: $users)
             VStack {
                 NavigationLink(destination: RegisterView(
                     groupId: group.id,
