@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct UpdateCreateGroupView: View {
-    @StateObject private var group = Group(groupName: "")
+    @Environment(\.dismiss) private var dismiss
+    @Binding var group: Group
+    @Binding var users: [User]
     @StateObject private var user = User(userName: "")
-    @State private var users: [User] = []
-    
+
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
         GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
@@ -32,7 +33,7 @@ struct UpdateCreateGroupView: View {
                             .frame(maxWidth: 350, alignment: .leading)
 
                         //入力欄
-                        TextField("グループ名", text: $group.groupName)
+                        TextField(group.groupName, text: $group.groupName)
                             .padding(15)
                             .background(Color.white)
                             .frame(width: 350)
@@ -74,9 +75,9 @@ struct UpdateCreateGroupView: View {
                         
                         
                         Button {
-                            print("ボタンが押されました")
+                            dismiss()
                         } label: {
-                            Text("グループを作成")
+                            Text("更新")
                                 .bold()
                                 .padding(.horizontal, 120)
                                 .padding(.vertical, 12)
@@ -107,6 +108,6 @@ struct UpdateCreateGroupView: View {
     }
 }
 
-#Preview {
-    UpdateCreateGroupView()
-}
+//#Preview {
+//    UpdateCreateGroupView()
+//}
