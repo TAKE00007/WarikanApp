@@ -14,14 +14,6 @@ struct CreateGrooupView: View {
     @State private var users: [User] = []
     @FocusState private var isUserNameFocused: Bool
     
-    let columns = [
-        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
-        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
-        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
-        GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
-        
-    ]
-    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
