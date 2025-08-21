@@ -124,6 +124,7 @@ struct UpdateRegisterView: View {
                 
                 //登録ボタン
                 Button {
+                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
                     for billingParticipant in billingParticipants {
                         if billingParticipant.billingId == billing.id {
                             billingParticipant.isShare = users.first { $0.id == billingParticipant.userId }?.isPay ?? true
