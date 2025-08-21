@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct HeaderView: View {
-    let group: Group
-    let users: [User]
+    @Binding var group: Group
+    @Binding var users: [User]
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -24,7 +24,7 @@ struct HeaderView: View {
                         .font(.title)
                         .bold()
                     Spacer()
-                    NavigationLink(destination: UpdateCreateGroupView()) {
+                    NavigationLink(destination: UpdateCreateGroupView(group: $group, users: $users)) {
                         Image(systemName: "pencil")
                             .font(.system(size: 25))
                             .foregroundColor(.white)
@@ -49,6 +49,6 @@ struct HeaderView: View {
     }
 }
 
-#Preview {
-    HeaderView(group: Group(groupName: "北海道旅行"), users: [User(userName: "たけ"), User(userName: "あおい"), User(userName: "かおる")])
-}
+//#Preview {
+//    HeaderView(group: Group(groupName: "北海道旅行"), users: [User(userName: "たけ"), User(userName: "あおい"), User(userName: "かおる")])
+//}
