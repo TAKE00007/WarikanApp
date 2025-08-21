@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CreateGrooupView: View {
-    @StateObject private var group = Group(groupName: "")
     @StateObject private var user = User(userName: "")
+    @State private var group = Group(groupName: "")
     @State private var userName: String = ""
     @State private var users: [User] = []
     @FocusState private var isUserNameFocused: Bool
@@ -70,7 +70,7 @@ struct CreateGrooupView: View {
                         //名前一覧
                         PreviewUserName(users: $users)
                         
-                        NavigationLink(destination: HomeView(group: group, users: $users)) {
+                        NavigationLink(destination: HomeView(group: $group, users: $users)) {
                             Text("グループを作成")
                                 .bold()
                                 .padding(.horizontal, 120)
