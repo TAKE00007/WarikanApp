@@ -7,9 +7,9 @@
 
 import Foundation
 
-class Group: ObservableObject, Identifiable {
+struct Group: Identifiable {
     let id = UUID()
-    @Published var groupName: String
+    var groupName: String
     
     init(groupName: String) {
         self.groupName = groupName
