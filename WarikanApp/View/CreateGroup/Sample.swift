@@ -7,28 +7,6 @@
 
 import SwiftUI
 
-struct Sample: View {
-    let names = ["take", "akihiro", "satoru", "takeda", "kanegon", "yosihide", "takehusa", "kaoru", "kaori", "takeda"]
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            FlowLayout(spacing: 8, lineSpacing: 8) {
-                ForEach(names, id: \.self) {name in
-                    HStack(spacing: 4) {
-                        Text(name)
-                            .padding(8)
-                            .background(Color.blue)
-                    }
-                }
-            }
-        }
-    }
-}
-
-#Preview {
-    Sample()
-}
-
 struct FlowLayout: Layout {
     var spacing: CGFloat = 8
     var lineSpacing: CGFloat = 8
