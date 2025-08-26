@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		22CC2BBB2E5DDD3C000C5756 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22CC2BBA2E5DDD3C000C5756 /* GoogleService-Info.plist */; };
+		22CC2BBE2E5DDE8C000C5756 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 22CC2BBD2E5DDE8C000C5756 /* FirebaseAuth */; };
+		22CC2BC02E5DDE8C000C5756 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 22CC2BBF2E5DDE8C000C5756 /* FirebaseCore */; };
+		22CC2BC22E5DDE8C000C5756 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 22CC2BC12E5DDE8C000C5756 /* FirebaseDatabase */; };
+		22CC2BC42E5DDEF4000C5756 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 22CC2BC32E5DDEF4000C5756 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		22A33C992E1D43B30089C653 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +35,7 @@
 		22A33C8B2E1D43AE0089C653 /* WarikanApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WarikanApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22A33C982E1D43B30089C653 /* WarikanAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WarikanAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		22A33CA22E1D43B30089C653 /* WarikanAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WarikanAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		22CC2BBA2E5DDD3C000C5756 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +61,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22CC2BC22E5DDE8C000C5756 /* FirebaseDatabase in Frameworks */,
+				22CC2BC42E5DDEF4000C5756 /* FirebaseFirestore in Frameworks */,
+				22CC2BC02E5DDE8C000C5756 /* FirebaseCore in Frameworks */,
+				22CC2BBE2E5DDE8C000C5756 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +92,7 @@
 				22A33C9B2E1D43B30089C653 /* WarikanAppTests */,
 				22A33CA52E1D43B30089C653 /* WarikanAppUITests */,
 				22A33C8C2E1D43AE0089C653 /* Products */,
+				22CC2BBA2E5DDD3C000C5756 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,6 +126,10 @@
 			);
 			name = WarikanApp;
 			packageProductDependencies = (
+				22CC2BBD2E5DDE8C000C5756 /* FirebaseAuth */,
+				22CC2BBF2E5DDE8C000C5756 /* FirebaseCore */,
+				22CC2BC12E5DDE8C000C5756 /* FirebaseDatabase */,
+				22CC2BC32E5DDEF4000C5756 /* FirebaseFirestore */,
 			);
 			productName = WarikanApp;
 			productReference = 22A33C8B2E1D43AE0089C653 /* WarikanApp.app */;
@@ -195,6 +213,9 @@
 			);
 			mainGroup = 22A33C822E1D43AE0089C653;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				22CC2BBC2E5DDE8C000C5756 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 22A33C8C2E1D43AE0089C653 /* Products */;
 			projectDirPath = "";
@@ -212,6 +233,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22CC2BBB2E5DDD3C000C5756 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -558,6 +580,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		22CC2BBC2E5DDE8C000C5756 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		22CC2BBD2E5DDE8C000C5756 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22CC2BBC2E5DDE8C000C5756 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		22CC2BBF2E5DDE8C000C5756 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22CC2BBC2E5DDE8C000C5756 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		22CC2BC12E5DDE8C000C5756 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22CC2BBC2E5DDE8C000C5756 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		22CC2BC32E5DDEF4000C5756 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22CC2BBC2E5DDE8C000C5756 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 22A33C832E1D43AE0089C653 /* Project object */;
 }
