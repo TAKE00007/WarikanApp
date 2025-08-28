@@ -24,11 +24,11 @@ class User: ObservableObject, Identifiable {
 class UserRepository {
     private let db = Firestore.firestore()
     
-    func addUser(_ user: User, completion: @escaping (Error?) -> Void) {
-        db.collection("users").document(user.id.uuidString).setData([
+    func addUser(_ user: User) async throws {
+        try await db.collection("users").document(user.id.uuidString).setData([
             "userName": user.userName,
             "isPay": user.isPay,
             "payPrice": user.payPrice
-        ], completion: completion)
+        ])
     }
 }
