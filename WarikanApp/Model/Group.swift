@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Group: Identifiable {
     let id = UUID()
@@ -13,5 +14,15 @@ struct Group: Identifiable {
     
     init(groupName: String) {
         self.groupName = groupName
+    }
+}
+
+class GroupRepository {
+    private let db = Firestore.firestore()
+    
+    func addGroup(_ group: Group) async throws {
+        try await db.collection("groups").document(group.id.uuidString).setData([
+            "groupName": group.groupName
+        ])
     }
 }
