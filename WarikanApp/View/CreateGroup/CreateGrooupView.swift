@@ -14,6 +14,9 @@ struct CreateGrooupView: View {
     @State private var users: [User] = []
     @FocusState private var isUserNameFocused: Bool
     
+    @State private var navigateToHome = false
+    @State private var createdGroup: Group?
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -70,7 +73,12 @@ struct CreateGrooupView: View {
                         //名前一覧
                         PreviewUserName(users: $users)
                         
-                        NavigationLink(destination: HomeView(group: $group, users: $users)) {
+                        //グループ作成
+                        Button {
+                            Task {
+                                await saveGroup()
+                            }
+                        } label: {
                             Text("グループを作成")
                                 .bold()
                                 .padding(.horizontal, 120)
@@ -80,8 +88,20 @@ struct CreateGrooupView: View {
                                 .cornerRadius(3)
                         }
                         .padding(.top, 100)
-
                         
+                        //NavigationLinkでHomeViewに遷移
+//                        NavigationLink(
+//                            destination: {
+//                                if let group = createdGroup {
+//                                    HomeView(group: .constant(group), users: .constant(users))
+//                                } else {
+//                                    EmptyView()
+//                                }
+//                            },
+//                            isActive: $navigateToHome
+//                        ) {
+//                            EmptyView()
+//                        }
                     }
                     .padding()
                     .toolbar {
@@ -98,6 +118,28 @@ struct CreateGrooupView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
+        }
+    }
+    
+    private func saveGroup() async {
+        do {
+            //group
+            let newGroup = Group(groupName: group.groupName)
+            let groupRepo = GroupRepository()
+            try await groupRepo.addGroup(newGroup)
+            
+            //user
+            let userRepo = UserRepository()
+            
+            for user in users {
+                try await userRepo.addUser(user)
+            }
+            
+            //成功した時
+            createdGroup = newGroup
+            navigateToHome = true
+        } catch {
+            print("保存失敗: \(error.localizedDescription)")
         }
     }
 }
