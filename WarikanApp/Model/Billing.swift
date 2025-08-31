@@ -34,7 +34,6 @@ class BillingRepository {
             "groupId": billing.groupId.uuidString,
             "paymentPrice": billing.paymentPrice,
             "priceTitle": billing.priceTitle,
-            "createdAt": billing.createdAt
         ])
     }
 }
