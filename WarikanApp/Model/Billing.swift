@@ -11,7 +11,7 @@ import FirebaseFirestore
 struct Billing: Identifiable {
     let id = UUID()
     var userId: UUID
-    var groupId: UUID
+    let groupId: UUID
     var paymentPrice: Int
     var priceTitle: String
     var createdAt = Date()

@@ -10,12 +10,14 @@ import FirebaseFirestore
 
 class User: ObservableObject, Identifiable {
     let id: UUID
+    let groupId: UUID
     @Published var userName: String
     @Published var isPay: Bool
     @Published var payPrice = 0
     
-    init(id: UUID = UUID(), userName: String, isPay: Bool = true) {
+    init(id: UUID = UUID(),groupId: UUID, userName: String, isPay: Bool = true) {
         self.id = id
+        self.groupId = groupId
         self.userName = userName
         self.isPay = isPay
     }
