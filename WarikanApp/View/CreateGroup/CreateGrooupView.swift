@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateGrooupView: View {
-    @StateObject private var user = User(userName: "")
+    @StateObject private var user = User(groupId: UUID(), userName: "")
     @State private var group = Group(groupName: "")
     @State private var userName: String = ""
     @State private var users: [User] = []
@@ -48,7 +48,7 @@ struct CreateGrooupView: View {
                             
                             Button {
                                 if !userName.isEmpty {
-                                    let newUser = User(userName: userName)
+                                    let newUser = User(groupId: group.id, userName: userName)
                                     users.append(newUser)
                                     userName = ""
                                     isUserNameFocused = false
