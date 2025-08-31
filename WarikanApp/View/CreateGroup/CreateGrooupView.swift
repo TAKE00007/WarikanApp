@@ -77,6 +77,7 @@ struct CreateGrooupView: View {
                         Button {
                             Task {
                                 await saveGroup()
+                                navigateToHome = true
                             }
                         } label: {
                             Text("グループを作成")
@@ -89,19 +90,10 @@ struct CreateGrooupView: View {
                         }
                         .padding(.top, 100)
                         
-                        //NavigationLinkでHomeViewに遷移
-//                        NavigationLink(
-//                            destination: {
-//                                if let group = createdGroup {
-//                                    HomeView(group: .constant(group), users: .constant(users))
-//                                } else {
-//                                    EmptyView()
-//                                }
-//                            },
-//                            isActive: $navigateToHome
-//                        ) {
-//                            EmptyView()
-//                        }
+                        //画面遷移
+                        .navigationDestination(isPresented: $navigateToHome) {
+                            HomeView(group: $group, users: $users)
+                        }
                     }
                     .padding()
                     .toolbar {
