@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Billing: Identifiable {
     let id = UUID()
@@ -21,5 +22,19 @@ struct Billing: Identifiable {
         self.paymentPrice = paymentPrice
         self.priceTitle = priceTitle
         self.createdAt = createdAt
+    }
+}
+
+class BillingRepository {
+    private let db = Firestore.firestore()
+    
+    func addBilling(_ billing: Billing) async throws {
+        try await db.collection("billings").document(billing.id.uuidString).setData([
+            "userId": billing.userId.uuidString,
+            "groupId": billing.groupId.uuidString,
+            "paymentPrice": billing.paymentPrice,
+            "priceTitle": billing.priceTitle,
+            "createdAt": billing.createdAt
+        ])
     }
 }
