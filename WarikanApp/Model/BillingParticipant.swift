@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 class BillingParticipant: Identifiable {
     let billingId: UUID
@@ -16,5 +17,19 @@ class BillingParticipant: Identifiable {
         self.billingId = billingId
         self.userId = userId
         self.isShare = isShare
+    }
+}
+
+class BillingParticipantRepository {
+    private let db = Firestore.firestore()
+    
+    func addBillingParticipant(_ billingParticipant: BillingParticipant) async throws {
+        let documentId = "\(billingParticipant.billingId.uuidString)_\(billingParticipant.userId.uuidString)"
+        
+        try await db.collection("billingParticipants").document(documentId).setData([
+            "billingId": billingParticipant.billingId.uuidString,
+            "userId": billingParticipant.userId.uuidString,
+            "isShare": billingParticipant.isShare
+        ])
     }
 }
