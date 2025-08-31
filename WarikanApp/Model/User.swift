@@ -28,7 +28,7 @@ class UserRepository {
     
     func addUser(_ user: User) async throws {
         try await db.collection("users").document(user.id.uuidString).setData([
-            "groupId": user.groupId,
+            "groupId": user.groupId.uuidString,
             "userName": user.userName,
             "isPay": user.isPay,
             "payPrice": user.payPrice
