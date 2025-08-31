@@ -11,7 +11,7 @@ struct UpdateCreateGroupView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var group: Group
     @Binding var users: [User]
-    @StateObject private var user = User(userName: "")
+    @StateObject private var user = User(groupId: UUID(), userName: "")
 
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
@@ -50,7 +50,7 @@ struct UpdateCreateGroupView: View {
                             
                             
                             Button {
-                                let newUser = User(userName: user.userName)
+                                let newUser = User(groupId: group.id, userName: user.userName)
                                 users.append(newUser)
                                 user.userName = ""
                             } label: {
