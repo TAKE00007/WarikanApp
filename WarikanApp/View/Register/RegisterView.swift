@@ -146,6 +146,7 @@ struct RegisterView: View {
                             let newBillingParticipant = BillingParticipant(
                                 billingId: newBilling.id,
                                 userId: user.id,
+                                groupId: groupId,
                                 isShare: user.isPay
                             )
                             await saveBillingParticipant(billingParticipant: newBillingParticipant)
