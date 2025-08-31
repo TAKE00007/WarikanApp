@@ -16,6 +16,7 @@ struct RegisterView: View {
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
     @State private var userId: UUID?
+    @State private var errorMessage: String?
     @Binding var users: [User]
     @Binding var billings: [Billing]
     @Binding var billingParticipants: [BillingParticipant]
@@ -105,7 +106,7 @@ struct RegisterView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                    TextField("4800", value: $paymentPrice, formatter: NumberFormatter())
+                    TextField("4800", value: $paymentPrice, formatter: numberFormatter)
                         .padding(.vertical, 15)
                         .padding(.leading, 15)
                         .background(Color("background"))
@@ -125,25 +126,36 @@ struct RegisterView: View {
                 
                 //登録ボタン
                 Button {
+                    guard let userId else {
+                        errorMessage = "ユーザーが選択されていません"
+                        return
+                    }
+                    
                     let newBilling = Billing(
-                        userId: userId!,
+                        userId: userId,
                         groupId: groupId,
                         paymentPrice: paymentPrice,
                         priceTitle: priceTitle
                     )
-                    for user in users {
-                        let newBillingParticipant = BillingParticipant(
-                            billingId: newBilling.id,
-                            userId: user.id,
-                            isShare: user.isPay
-                        )
-                        billingParticipants.append(newBillingParticipant)
+                    
+                    Task {
+                        await saveBilling(billing: newBilling)
+                        billings.append(newBilling)
+                        
+                        for user in users {
+                            let newBillingParticipant = BillingParticipant(
+                                billingId: newBilling.id,
+                                userId: user.id,
+                                isShare: user.isPay
+                            )
+                            await saveBillingParticipant(billingParticipant: newBillingParticipant)
+                            billingParticipants.append(newBillingParticipant)
+                        }
+                        
+                        priceTitle = ""
+                        paymentPrice = 0
+                        dismiss()
                     }
-                    billings.append(newBilling)
-                    priceTitle = ""
-                    paymentPrice = 0
-                    print("ボタンが押されました")
-                    dismiss()
                 } label: {
                     Text("登録")
                         .font(.headline)
@@ -154,6 +166,16 @@ struct RegisterView: View {
                         .cornerRadius(3)
                 }
                 .padding(.top, 40)
+                .alert(isPresented: .constant(errorMessage != nil)) {
+                    Alert(
+                        title: Text("エラー"),
+                        message: Text(errorMessage ?? ""),
+                        dismissButton: .default(Text("OK")) {
+                            errorMessage = nil
+                        }
+                    )
+                }
+                
                 //戻るボタン
                 Button {
                     dismiss()
@@ -185,6 +207,32 @@ struct RegisterView: View {
             .toolbarBackground(Color("main"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
+    private func saveBilling(billing: Billing) async {
+        do {
+            let newBilling = billing
+            let billingRepo = BillingRepository()
+            try await billingRepo.addBilling(newBilling)
+        } catch {
+            print("billingの保存失敗: \(error.localizedDescription)")
+        }
+    }
+    
+    private func saveBillingParticipant(billingParticipant: BillingParticipant) async {
+        do {
+            let newBillingParticipant = billingParticipant
+            let billingParticipantRepo = BillingParticipantRepository()
+            try await billingParticipantRepo.addBillingParticipant(newBillingParticipant)
+        } catch {
+            print("billingParticipantの保存失敗: \(error.localizedDescription)")
         }
     }
 }
