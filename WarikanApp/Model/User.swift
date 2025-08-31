@@ -34,4 +34,35 @@ class UserRepository {
             "payPrice": user.payPrice
         ])
     }
+    
+    func fetchUsers(byGroupId groupId: UUID) async throws -> [User] {
+        let snapshot = try await db.collection("users")
+            .whereField("groupId", isEqualTo: groupId.uuidString)
+            .getDocuments()
+        
+        let users: [User] = snapshot.documents.compactMap { doc in
+            let data = doc.data()
+            guard
+                let groupIdString = data["groupId"] as? String,
+                let groupUUID = UUID(uuidString: groupIdString),
+                let userName = data["userName"] as? String,
+                let isPay = data["isPay"] as? Bool,
+                let payPrice = data["payPrice"] as? Int
+            else {
+                return nil
+            }
+            
+            let user = User(
+                id: UUID(uuidString: doc.documentID) ?? UUID(),
+                groupId: groupUUID,
+                userName: userName,
+                isPay: isPay
+            )
+            user.payPrice = payPrice
+            return user
+        }
+        
+        return users
+    }
+    
 }
