@@ -31,6 +31,7 @@ class BillingParticipantRepository {
         try await db.collection("billingParticipants").document(documentId).setData([
             "billingId": billingParticipant.billingId.uuidString,
             "userId": billingParticipant.userId.uuidString,
+            "groupId": billingParticipant.groupId.uuidString,
             "isShare": billingParticipant.isShare
         ])
     }
