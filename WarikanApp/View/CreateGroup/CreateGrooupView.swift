@@ -92,7 +92,7 @@ struct CreateGrooupView: View {
                         
                         //画面遷移
                         .navigationDestination(isPresented: $navigateToHome) {
-                            HomeView(group: $group, users: $users)
+                            HomeView(group: $group)
                         }
                     }
                     .padding()

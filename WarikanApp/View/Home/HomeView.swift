@@ -9,8 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Binding var group: Group
-    @Binding var users: [User]
-    
+    @State var users: [User] = []
     @State var billings: [Billing] = []
     @State var billingParticipants: [BillingParticipant] = []
     
@@ -97,9 +96,21 @@ struct HomeView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarBackButtonHidden(true)
         }
-
-
+        .task {
+            await loadUsers()
+        }
     }
+    
+    private func loadUsers() async {
+        let repo = UserRepository()
+        do {
+            let fetched = try await repo.fetchUsers(byGroupId: group.id)
+            users = fetched
+        } catch {
+            print("ユーザー取得失敗: \(error.localizedDescription)")
+        }
+    }
+    
 }
 
 //#Preview {
