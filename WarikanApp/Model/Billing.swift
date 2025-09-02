@@ -9,14 +9,15 @@ import Foundation
 import FirebaseFirestore
 
 struct Billing: Identifiable {
-    let id = UUID()
+    let id: UUID
     var userId: UUID
     let groupId: UUID
     var paymentPrice: Int
     var priceTitle: String
     var createdAt = Date()
     
-    init(userId: UUID, groupId: UUID, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
+    init(id: UUID = UUID(), userId: UUID, groupId: UUID, paymentPrice: Int, priceTitle: String, createdAt: Date = Date()) {
+        self.id = id
         self.userId = userId
         self.groupId = groupId
         self.paymentPrice = paymentPrice
@@ -35,5 +36,36 @@ class BillingRepository {
             "paymentPrice": billing.paymentPrice,
             "priceTitle": billing.priceTitle,
         ])
+    }
+    
+    func fetchBillings(byGroupId groupId: UUID) async throws -> [Billing] {
+        let snapshot = try await db.collection("billings")
+            .whereField("groupId", isEqualTo: groupId.uuidString)
+            .getDocuments()
+        
+        let billings: [Billing] = snapshot.documents.compactMap { doc in
+            let data = doc.data()
+            guard
+                let userIdString = data["userId"] as? String,
+                let userUUID = UUID(uuidString: userIdString),
+                let groupIdString = data["groupId"] as? String,
+                let groupUUID = UUID(uuidString: groupIdString),
+                let paymentPrice = data["paymentPrice"] as? Int,
+                let priceTitle = data["priceTitle"] as? String
+            else {
+                return nil
+            }
+            
+            let billing = Billing(
+                id: UUID(uuidString: doc.documentID) ?? UUID(),
+                userId: userUUID,
+                groupId: groupUUID,
+                paymentPrice: paymentPrice,
+                priceTitle: priceTitle
+            )
+            return billing
+        }
+        
+        return billings
     }
 }
