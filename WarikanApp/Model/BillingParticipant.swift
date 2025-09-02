@@ -35,4 +35,34 @@ class BillingParticipantRepository {
             "isShare": billingParticipant.isShare
         ])
     }
+    
+    func fetchBillingParticipants(byGroupId groupId: UUID) async throws -> [BillingParticipant] {
+        let snapshot = try await db.collection("billingParticipants")
+            .whereField("groupId", isEqualTo: groupId.uuidString)
+            .getDocuments()
+        
+        let billingParticipants: [BillingParticipant] = snapshot.documents.compactMap { doc in
+            let data = doc.data()
+            guard
+                let billingIdString = data["billingId"] as? String,
+                let billingUUID = UUID(uuidString: billingIdString),
+                let userIdString = data["userId"] as? String,
+                let userUUID = UUID(uuidString: userIdString),
+                let groupIdString = data["groupId"] as? String,
+                let groupUUID = UUID(uuidString: groupIdString),
+                let isShare = data["isShare"] as? Bool
+            else {
+                return nil
+            }
+            
+            let billingParticipant = BillingParticipant(
+                billingId: billingUUID,
+                userId: userUUID,
+                groupId: groupUUID,
+                isShare: isShare
+            )
+            return billingParticipant
+        }
+        return billingParticipants
+    }
 }
