@@ -110,6 +110,24 @@ struct HomeView: View {
             print("ユーザー取得失敗: \(error.localizedDescription)")
         }
     }
+    private func loadBillings() async {
+        let repo = BillingRepository()
+        do {
+            let fetched = try await repo.fetchBillings(byGroupId: group.id)
+            billings = fetched
+        } catch {
+            print("明細取得失敗: \(error.localizedDescription)")
+        }
+    }
+    private func loadBillingParticipants() async {
+        let repo = BillingParticipantRepository()
+        do {
+            let fetched = try await repo.fetchBillingParticipants(byGroupId: group.id)
+            billingParticipants = fetched
+        } catch {
+            print("個人ごとの明細取得失敗: \(error.localizedDescription)")
+        }
+    }
     
 }
 
