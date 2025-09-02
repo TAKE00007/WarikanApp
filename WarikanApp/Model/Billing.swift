@@ -38,7 +38,7 @@ class BillingRepository {
         ])
     }
     
-    func fetchUsers(byGroupId groupId: UUID) async throws -> [Billing] {
+    func fetchBillings(byGroupId groupId: UUID) async throws -> [Billing] {
         let snapshot = try await db.collection("billings")
             .whereField("groupId", isEqualTo: groupId.uuidString)
             .getDocuments()
