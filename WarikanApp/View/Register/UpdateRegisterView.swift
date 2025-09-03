@@ -182,6 +182,26 @@ struct UpdateRegisterView: View {
             .toolbarBackground(.visible, for: .navigationBar)
         }
     }
+    
+    private func updateBilling(billing: Billing) async {
+        do {
+            let updateBilling = billing
+            let billingRepo = BillingRepository()
+            try await billingRepo.updateBilling(updateBilling)
+        } catch {
+            print("billingの更新失敗: \(error.localizedDescription)")
+        }
+    }
+    
+    private func updateBillingParticipants(billingParticipants: BillingParticipant) async {
+        do {
+            let updateBillingParticipant = billingParticipants
+            let billilngParticipantRepo = BillingParticipantRepository()
+            try await billilngParticipantRepo.udpateBillingParticipant(updateBillingParticipant)
+        } catch {
+            print("billingParticipantの更新失敗: \(error.localizedDescription)")
+        }
+    }
 }
 
 //#Preview {
