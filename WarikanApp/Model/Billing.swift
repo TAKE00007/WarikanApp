@@ -35,6 +35,7 @@ class BillingRepository {
             "groupId": billing.groupId.uuidString,
             "paymentPrice": billing.paymentPrice,
             "priceTitle": billing.priceTitle,
+            "createdAt": Timestamp(date: billing.createdAt)
         ])
     }
     
@@ -51,21 +52,34 @@ class BillingRepository {
                 let groupIdString = data["groupId"] as? String,
                 let groupUUID = UUID(uuidString: groupIdString),
                 let paymentPrice = data["paymentPrice"] as? Int,
-                let priceTitle = data["priceTitle"] as? String
+                let priceTitle = data["priceTitle"] as? String,
+                let timestamp = data["createdAt"] as? Timestamp
             else {
                 return nil
             }
+            
+            let createdAt = timestamp.dateValue()
             
             let billing = Billing(
                 id: UUID(uuidString: doc.documentID) ?? UUID(),
                 userId: userUUID,
                 groupId: groupUUID,
                 paymentPrice: paymentPrice,
-                priceTitle: priceTitle
+                priceTitle: priceTitle,
+                createdAt: createdAt
             )
             return billing
         }
         
         return billings
+    }
+    
+    func updateBilling(_ billing: Billing) async throws {
+        try await db.collection("billings").document(billing.id.uuidString).updateData([
+            "userId": billing.userId.uuidString,
+            "paymentPrice": billing.paymentPrice,
+            "priceTitle": billing.priceTitle,
+            "createdAt": Timestamp(date: billing.createdAt)
+        ])
     }
 }
