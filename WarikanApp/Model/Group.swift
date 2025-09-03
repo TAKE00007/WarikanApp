@@ -25,4 +25,23 @@ class GroupRepository {
             "groupName": group.groupName
         ])
     }
+    
+    func fetchGroup(byGroupId groupId: UUID) async throws -> Group? {
+        let res = try await db.collection("groups").document(groupId.uuidString).getDocument()
+        
+        guard
+            let data = res.data(),
+            let groupName = data["groupName"] as? String
+        else {
+            return nil
+        }
+        
+        return Group(groupName: groupName)
+    }
+    
+    func updateGroup(_ group: Group) async throws {
+        try await db.collection("groups").document(group.id.uuidString).updateData([
+            "groupName": group.groupName
+        ])
+    }
 }
