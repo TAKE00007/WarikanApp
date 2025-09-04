@@ -124,17 +124,19 @@ struct UpdateRegisterView: View {
                 
                 //登録ボタン
                 Button {
-                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
-                    for billingParticipant in billingParticipants {
-                        if billingParticipant.billingId == billing.id {
-                            billingParticipant.isShare = users.first { $0.id == billingParticipant.userId }?.isPay ?? true
-                        }
-                    }
+                    guard let userId = userId else { return }
                     billing.priceTitle = paymentTitle
                     billing.paymentPrice = Int(paymentText) ?? billing.paymentPrice
-                    billing.userId = userId!
+                    billing.userId = userId
                     billing.createdAt = Date()
-                    print("ボタンが押されました")
+                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
+                    let target = billingParticipants
+                        .filter { $0.billingId == billing.id }
+                        .map { part -> BillingParticipant in
+                            var p = part
+                            p.isShare = users.first { $0.id == p.userId }?.isPay ?? true
+                            return p
+                        }
                     dismiss()
                 } label: {
                     Text("登録")
