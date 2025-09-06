@@ -182,6 +182,16 @@ struct UpdateRegisterView: View {
                 paymentTitle = billing.priceTitle
                 paymentText = String(billing.paymentPrice)
                 
+                //billingParticipantsからbillingIdと同じものを抽出
+                //それぞれのisPayをuser.isPayに代入
+                let targetBillingParticipants = billingParticipants
+                    .filter { $0.billingId == billing.id }
+                
+                for user in users {
+                    let userPay = targetBillingParticipants.first { $0.userId == user.id }?.isShare ?? false
+                    user.isPay = userPay
+                }
+                
                 if let index = users.firstIndex(where: { $0.id == billing.userId }) {
                     selectedIndex = index
                     userId = users[index].id
