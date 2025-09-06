@@ -82,4 +82,28 @@ class BillingRepository {
             "createdAt": Timestamp(date: billing.createdAt)
         ])
     }
+    
+    //db.batch(): FirebaseのWriteBatchを呼び出す
+    //1バッチ500操作まで
+    func updateBillingWithParticipants(billing: Billing, participants: [BillingParticipant]) async throws {
+        let batch = db.batch()
+        let billingRef = db.collection("billings").document(billing.id.uuidString)
+        
+        batch.updateData([
+            "userId": billing.userId.uuidString,
+            "paymentPrice": billing.paymentPrice,
+            "priceTitle": billing.priceTitle
+        ], forDocument: billingRef)
+        
+        let partCol = db.collection("billingParticipants")
+        for p in participants {
+            let docId = "\(p.billingId.uuidString)_\(p.userId.uuidString)"
+            let ref = partCol.document(docId)
+            batch.updateData([
+                "isShare": p.isShare
+            ], forDocument: ref)
+        }
+        
+        try await batch.commit()
+    }
 }
