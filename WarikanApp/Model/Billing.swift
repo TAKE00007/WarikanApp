@@ -83,8 +83,8 @@ class BillingRepository {
         ])
     }
     
-    //db.batch()とは何？？
-    //billingRefとは何か？？
+    //db.batch(): FirebaseのWriteBatchを呼び出す
+    //1バッチ500操作まで
     func updateBillingWithParticipants(billing: Billing, participants: [BillingParticipant]) async throws {
         let batch = db.batch()
         let billingRef = db.collection("billings").document(billing.id.uuidString)
@@ -95,7 +95,7 @@ class BillingRepository {
             "priceTitle": billing.priceTitle
         ], forDocument: billingRef)
         
-        let partCol = db.collection("billingParticpants")
+        let partCol = db.collection("billingParticipants")
         for p in participants {
             let docId = "\(p.billingId.uuidString)_\(p.userId.uuidString)"
             let ref = partCol.document(docId)
