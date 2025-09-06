@@ -66,8 +66,8 @@ class BillingParticipantRepository {
         return billingParticipants
     }
     
-    func udpateBillingParticipant(_ billingParticipant: BillingParticipant) async throws {
-        let documentId = "(\(billingParticipant.billingId)_\(billingParticipant.userId))"
+    func updateBillingParticipant(_ billingParticipant: BillingParticipant) async throws {
+        let documentId = "(\(billingParticipant.billingId.uuidString)_\(billingParticipant.userId.uuidString))"
         try await db.collection("billingParticipants").document(documentId).updateData([
             "isShare": billingParticipant.isShare
         ])
