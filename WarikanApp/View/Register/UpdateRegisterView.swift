@@ -138,32 +138,6 @@ struct UpdateRegisterView: View {
                 .padding(.top, 40)
                 .disabled(isSaving)
                 
-                //登録ボタン
-//                Button {
-//                    guard let userId = userId else { return }
-//                    billing.priceTitle = paymentTitle
-//                    billing.paymentPrice = Int(paymentText) ?? billing.paymentPrice
-//                    billing.userId = userId
-//                    billing.createdAt = Date()
-//                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
-//                    let target = billingParticipants
-//                        .filter { $0.billingId == billing.id }
-//                        .map { part -> BillingParticipant in
-//                            var p = part
-//                            p.isShare = users.first { $0.id == p.userId }?.isPay ?? true
-//                            return p
-//                        }
-//                    dismiss()
-//                } label: {
-//                    Text("登録")
-//                        .font(.headline)
-//                        .fontWeight(.bold)
-//                        .frame(width: 350, height: 55)
-//                        .foregroundStyle(Color.white)
-//                        .background(Color("main"))
-//                        .cornerRadius(3)
-//                }
-//                .padding(.top, 40)
                 //戻るボタン
                 Button {
                     dismiss()
@@ -181,6 +155,16 @@ struct UpdateRegisterView: View {
             .onAppear {
                 paymentTitle = billing.priceTitle
                 paymentText = String(billing.paymentPrice)
+                
+                //billingParticipantsからbillingIdと同じものを抽出
+                //それぞれのisPayをuser.isPayに代入
+                let targetBillingParticipants = billingParticipants
+                    .filter { $0.billingId == billing.id }
+                
+                for user in users {
+                    let userPay = targetBillingParticipants.first { $0.userId == user.id }?.isShare ?? false
+                    user.isPay = userPay
+                }
                 
                 if let index = users.firstIndex(where: { $0.id == billing.userId }) {
                     selectedIndex = index
@@ -207,7 +191,7 @@ struct UpdateRegisterView: View {
         guard let userId = userId else {
             errorMessage = "ユーザーが選択されていません"; return
         }
-        // trimmingCharactersとは何か？？
+        //trimmingCharacters: 両端の空白を削除する
         guard !paymentTitle.trimmingCharacters(in: .whitespaces).isEmpty else {
             errorMessage = "項目名を入力してください"; return
         }
@@ -229,6 +213,12 @@ struct UpdateRegisterView: View {
             .map { part in
                 part.isShare = users.first { $0.id == part.userId }?.isPay ?? true
                 return part
+            }
+        
+        //払う人(billing.userId)が選択されているけどチェックが外れている場合(billingParticipants.isShare=falseを排除
+        if let targetIsShare = billingParticipants
+            .first (where: { $0.userId == billing.userId && $0.billingId == billing.id })?.isShare, targetIsShare == false {
+            errorMessage = "支払い者のチェックが外れています"; return
             }
         
         do {
