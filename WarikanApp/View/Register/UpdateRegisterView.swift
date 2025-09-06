@@ -14,6 +14,8 @@ struct UpdateRegisterView: View {
     @State private var userId: UUID?
     @State private var paymentTitle = ""
     @State private var paymentText = ""
+    @State private var isSaving = false
+    @State private var errorMessage: String?
     let users: [User]
     @Binding var billing: Billing
     @Binding var billings: [Billing]
@@ -124,30 +126,44 @@ struct UpdateRegisterView: View {
                 
                 //登録ボタン
                 Button {
-                    guard let userId = userId else { return }
-                    billing.priceTitle = paymentTitle
-                    billing.paymentPrice = Int(paymentText) ?? billing.paymentPrice
-                    billing.userId = userId
-                    billing.createdAt = Date()
-                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
-                    let target = billingParticipants
-                        .filter { $0.billingId == billing.id }
-                        .map { part -> BillingParticipant in
-                            var p = part
-                            p.isShare = users.first { $0.id == p.userId }?.isPay ?? true
-                            return p
-                        }
-                    dismiss()
+                    Task { await save() }
                 } label: {
-                    Text("登録")
-                        .font(.headline)
-                        .fontWeight(.bold)
+                    Text(isSaving ? "更新中..." : "登録")
+                        .font(.headline).fontWeight(.bold)
                         .frame(width: 350, height: 55)
                         .foregroundStyle(Color.white)
                         .background(Color("main"))
                         .cornerRadius(3)
                 }
                 .padding(.top, 40)
+                .disabled(isSaving)
+                
+                //登録ボタン
+//                Button {
+//                    guard let userId = userId else { return }
+//                    billing.priceTitle = paymentTitle
+//                    billing.paymentPrice = Int(paymentText) ?? billing.paymentPrice
+//                    billing.userId = userId
+//                    billing.createdAt = Date()
+//                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
+//                    let target = billingParticipants
+//                        .filter { $0.billingId == billing.id }
+//                        .map { part -> BillingParticipant in
+//                            var p = part
+//                            p.isShare = users.first { $0.id == p.userId }?.isPay ?? true
+//                            return p
+//                        }
+//                    dismiss()
+//                } label: {
+//                    Text("登録")
+//                        .font(.headline)
+//                        .fontWeight(.bold)
+//                        .frame(width: 350, height: 55)
+//                        .foregroundStyle(Color.white)
+//                        .background(Color("main"))
+//                        .cornerRadius(3)
+//                }
+//                .padding(.top, 40)
                 //戻るボタン
                 Button {
                     dismiss()
@@ -185,6 +201,45 @@ struct UpdateRegisterView: View {
         }
     }
     
+    //まとめて更新
+    private func save() async {
+        guard !isSaving else { return }
+        guard let userId = userId else {
+            errorMessage = "ユーザーが選択されていません"; return
+        }
+        // trimmingCharactersとは何か？？
+        guard !paymentTitle.trimmingCharacters(in: .whitespaces).isEmpty else {
+            errorMessage = "項目名を入力してください"; return
+        }
+        guard let price = Int(paymentText), price >= 0 else {
+            errorMessage = "金額は数値で入力してください"; return
+        }
+        
+        isSaving = true
+        defer { isSaving = false }
+        
+        //billing更新
+        billing.userId = userId
+        billing.priceTitle = paymentTitle
+        billing.paymentPrice = price
+        
+        //billingParticipantを更新
+        let targets: [BillingParticipant] = billingParticipants
+            .filter { $0.billingId == billing.id }
+            .map { part in
+                part.isShare = users.first { $0.id == part.userId }?.isPay ?? true
+                return part
+            }
+        
+        do {
+            let repo = BillingRepository()
+            try await repo.updateBillingWithParticipants(billing: billing, participants: targets)
+            dismiss()
+        } catch {
+            errorMessage = "更新に失敗しました: \(error.localizedDescription)"
+        }
+    }
+    
     private func updateBilling(billing: Billing) async {
         do {
             let updateBilling = billing
@@ -199,7 +254,7 @@ struct UpdateRegisterView: View {
         do {
             let updateBillingParticipant = billingParticipants
             let billilngParticipantRepo = BillingParticipantRepository()
-            try await billilngParticipantRepo.udpateBillingParticipant(updateBillingParticipant)
+            try await billilngParticipantRepo.updateBillingParticipant(updateBillingParticipant)
         } catch {
             print("billingParticipantの更新失敗: \(error.localizedDescription)")
         }
