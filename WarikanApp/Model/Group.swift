@@ -45,7 +45,8 @@ class GroupRepository {
         let groups: [Group] = snapshot.documents.compactMap { doc in
             let data = doc.data()
             guard
-                let groupName = data["groupName"] as? String
+                let groupName = data["groupName"] as? String,
+                !groupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             else {
                 return nil
             }
