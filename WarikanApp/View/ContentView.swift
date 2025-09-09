@@ -64,9 +64,21 @@ struct ContentView: View {
                             .fontWeight(.bold)
                     }
                 }
+                .task {
+                    await loadGroups()
+                }
             }
         }
-        
+    }
+    
+    private func loadGroups() async {
+        let repo = GroupRepository()
+        do {
+            let fetched = try await repo.fetchAllGroups()
+            groups = fetched
+        } catch {
+            print("グループ取得失敗: \(error.localizedDescription)")
+        }
     }
 }
 
