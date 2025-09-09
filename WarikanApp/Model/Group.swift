@@ -9,10 +9,11 @@ import Foundation
 import FirebaseFirestore
 
 struct Group: Identifiable {
-    let id = UUID()
+    let id: UUID
     var groupName: String
     
-    init(groupName: String) {
+    init(id: UUID = UUID(), groupName: String) {
+        self.id = id
         self.groupName = groupName
     }
 }
@@ -37,6 +38,27 @@ class GroupRepository {
         }
         
         return Group(groupName: groupName)
+    }
+    
+    func fetchAllGroups() async throws -> [Group] {
+        let snapshot = try await db.collection("groups").getDocuments()
+        let groups: [Group] = snapshot.documents.compactMap { doc in
+            let data = doc.data()
+            guard
+                let groupName = data["groupName"] as? String,
+                !groupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            else {
+                return nil
+            }
+            
+            let group = Group(
+                id: UUID(uuidString: doc.documentID) ?? UUID(),
+                groupName: groupName
+            )
+            return group
+        }
+        
+        return groups
     }
     
     func updateGroup(_ group: Group) async throws {
