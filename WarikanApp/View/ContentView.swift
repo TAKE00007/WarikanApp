@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var groups: [Group] = []
     var body: some View {
         NavigationStack {
             ZStack {
@@ -46,6 +47,12 @@ struct ContentView: View {
                     }
                     
                     Spacer()
+                    
+                    Text("最近のグループ")
+                    ForEach(groups) { group in
+                        Text("\(group.groupName)")
+                    }
+                    
                     
                 }
                 .foregroundStyle(Color.white)
