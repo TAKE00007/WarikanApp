@@ -46,13 +46,14 @@ class GroupRepository {
             let data = doc.data()
             guard
                 let groupName = data["groupName"] as? String,
-                !groupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                !groupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                let groupId = UUID(uuidString: doc.documentID)
             else {
                 return nil
             }
             
             let group = Group(
-                id: UUID(uuidString: doc.documentID) ?? UUID(),
+                id: groupId,
                 groupName: groupName
             )
             return group
