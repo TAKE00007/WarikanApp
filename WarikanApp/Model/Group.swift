@@ -37,7 +37,7 @@ class GroupRepository {
             return nil
         }
         
-        return Group(groupName: groupName)
+        return Group(id: groupId, groupName: groupName)
     }
     
     func fetchAllGroups() async throws -> [Group] {

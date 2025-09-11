@@ -120,14 +120,16 @@ struct CreateGrooupView: View {
             let groupRepo = GroupRepository()
             try await groupRepo.addGroup(newGroup)
             
-            //user
+            //users
+            //groupIdをnewGroup.idに変更してから保存する
             let userRepo = UserRepository()
-            
             for user in users {
-                try await userRepo.addUser(user)
+                let fixedUser = User(groupId: newGroup.id, userName: user.userName)
+                try await userRepo.addUser(fixedUser)
             }
             
             //成功した時
+            group = newGroup
             createdGroup = newGroup
             navigateToHome = true
         } catch {

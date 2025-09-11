@@ -104,6 +104,7 @@ struct HomeView: View {
     private func loadUsers() async {
         let repo = UserRepository()
         do {
+            print("Tapped group id:", group.id.uuidString)
             let fetched = try await repo.fetchUsers(byGroupId: group.id)
             users = fetched
         } catch {
