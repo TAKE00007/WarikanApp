@@ -98,6 +98,8 @@ struct HomeView: View {
         }
         .task {
             await loadUsers()
+            await loadBillings()
+            await loadBillingParticipants()
         }
     }
     
