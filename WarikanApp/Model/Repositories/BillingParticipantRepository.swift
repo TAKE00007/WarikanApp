@@ -52,6 +52,24 @@ class BillingParticipantRepository {
         return billingParticipants
     }
     
+    func addBillingParticipants(_ billingParticipants: [BillingParticipant]) async throws {
+        let batch = db.batch()
+        let col = db.collection("billingParticipants")
+        
+        for billingParticipant in billingParticipants {
+            let docId = "\(billingParticipant.billingId.uuidString)_\(billingParticipant.userId.uuidString)"
+            let doc = col.document(docId)
+            batch.setData([
+                "billingId": billingParticipant.billingId.uuidString,
+                "userId": billingParticipant.userId.uuidString,
+                "groupId": billingParticipant.groupId.uuidString,
+                "isShare": billingParticipant.isShare
+            ], forDocument: doc)
+        }
+        
+        try await batch.commit()
+    }
+    
     func updateBillingParticipant(_ billingParticipant: BillingParticipant) async throws {
         let documentId = "(\(billingParticipant.billingId.uuidString)_\(billingParticipant.userId.uuidString))"
         try await db.collection("billingParticipants").document(documentId).updateData([
