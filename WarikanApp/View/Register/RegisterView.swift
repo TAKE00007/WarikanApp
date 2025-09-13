@@ -225,26 +225,6 @@ struct RegisterView: View {
         formatter.numberStyle = .decimal
         return formatter
     }()
-    
-    private func saveBilling(billing: Billing) async {
-        do {
-            let newBilling = billing
-            let billingRepo = BillingRepository()
-            try await billingRepo.addBilling(newBilling)
-        } catch {
-            print("billingの保存失敗: \(error.localizedDescription)")
-        }
-    }
-    
-    private func saveBillingParticipant(billingParticipant: BillingParticipant) async {
-        do {
-            let newBillingParticipant = billingParticipant
-            let billingParticipantRepo = BillingParticipantRepository()
-            try await billingParticipantRepo.addBillingParticipant(newBillingParticipant)
-        } catch {
-            print("billingParticipantの保存失敗: \(error.localizedDescription)")
-        }
-    }
 }
 
 //#Preview {
