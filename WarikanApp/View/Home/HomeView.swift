@@ -97,41 +97,16 @@ struct HomeView: View {
             .navigationBarBackButtonHidden(true)
         }
         .task {
-            await loadUsers()
-            await loadBillings()
-            await loadBillingParticipants()
+            do {
+                let homeData = try await UserService().loadUsersWithBillings(groupId: group.id)
+                users = homeData.users
+                billings = homeData.billings
+                billingParticipants = homeData.billingParticipants
+            } catch {
+                print("読み込み失敗: \(error)")
+            }
         }
     }
-    
-    private func loadUsers() async {
-        let repo = UserRepository()
-        do {
-            print("Tapped group id:", group.id.uuidString)
-            let fetched = try await repo.fetchUsers(byGroupId: group.id)
-            users = fetched
-        } catch {
-            print("ユーザー取得失敗: \(error.localizedDescription)")
-        }
-    }
-    private func loadBillings() async {
-        let repo = BillingRepository()
-        do {
-            let fetched = try await repo.fetchBillings(byGroupId: group.id)
-            billings = fetched
-        } catch {
-            print("明細取得失敗: \(error.localizedDescription)")
-        }
-    }
-    private func loadBillingParticipants() async {
-        let repo = BillingParticipantRepository()
-        do {
-            let fetched = try await repo.fetchBillingParticipants(byGroupId: group.id)
-            billingParticipants = fetched
-        } catch {
-            print("個人ごとの明細取得失敗: \(error.localizedDescription)")
-        }
-    }
-    
 }
 
 //#Preview {
