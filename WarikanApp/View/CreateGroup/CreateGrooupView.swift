@@ -76,8 +76,17 @@ struct CreateGrooupView: View {
                         //グループ作成
                         Button {
                             Task {
-                                await saveGroup()
-                                navigateToHome = true
+                                do {
+                                    let service = GroupService()
+                                    let saved = try await service.createGroupWithUsers(
+                                        groupName: group.groupName,
+                                        users: users
+                                    )
+                                    group = saved
+                                    navigateToHome = true
+                                } catch {
+                                    print("グループ作成失敗")
+                                }
                             }
                         } label: {
                             Text("グループを作成")
@@ -110,30 +119,6 @@ struct CreateGrooupView: View {
                 }
             }
             .navigationBarBackButtonHidden(true)
-        }
-    }
-    
-    private func saveGroup() async {
-        do {
-            //group
-            let newGroup = Group(groupName: group.groupName)
-            let groupRepo = GroupRepository()
-            try await groupRepo.addGroup(newGroup)
-            
-            //users
-            //groupIdをnewGroup.idに変更してから保存する
-            let userRepo = UserRepository()
-            for user in users {
-                let fixedUser = User(groupId: newGroup.id, userName: user.userName)
-                try await userRepo.addUser(fixedUser)
-            }
-            
-            //成功した時
-            group = newGroup
-            createdGroup = newGroup
-            navigateToHome = true
-        } catch {
-            print("保存失敗: \(error.localizedDescription)")
         }
     }
 }
