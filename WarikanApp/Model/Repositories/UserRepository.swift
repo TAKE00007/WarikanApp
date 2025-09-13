@@ -28,7 +28,7 @@ class UserRepository {
             let doc = col.document(user.id.uuidString)
             batch.setData([
                 "groupId": user.groupId.uuidString,
-                "usersName": user.userName,
+                "userName": user.userName,
                 "isPay": user.isPay,
                 "payPrice": user.payPrice
             ], forDocument: doc)
