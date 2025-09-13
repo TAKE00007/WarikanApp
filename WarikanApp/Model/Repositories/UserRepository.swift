@@ -1,27 +1,12 @@
 //
-//  User.swift
+//  UserRepository.swift
 //  WarikanApp
 //
-//  Created by 大竹駿 on 2025/07/21.
+//  Created by 大竹駿 on 2025/09/13.
 //
 
 import Foundation
 import FirebaseFirestore
-
-class User: ObservableObject, Identifiable {
-    let id: UUID
-    let groupId: UUID
-    @Published var userName: String
-    @Published var isPay: Bool
-    @Published var payPrice = 0
-    
-    init(id: UUID = UUID(),groupId: UUID, userName: String, isPay: Bool = true) {
-        self.id = id
-        self.groupId = groupId
-        self.userName = userName
-        self.isPay = isPay
-    }
-}
 
 class UserRepository {
     private let db = Firestore.firestore()
@@ -33,6 +18,23 @@ class UserRepository {
             "isPay": user.isPay,
             "payPrice": user.payPrice
         ])
+    }
+    
+    func addUsers(_ users: [User]) async throws {
+        let batch = db.batch()
+        let col = db.collection("users")
+        
+        for user in users {
+            let doc = col.document(user.id.uuidString)
+            batch.setData([
+                "groupId": user.groupId.uuidString,
+                "usersName": user.userName,
+                "isPay": user.isPay,
+                "payPrice": user.payPrice
+            ], forDocument: doc)
+        }
+        
+        try await batch.commit()
     }
     
     func fetchUsers(byGroupId groupId: UUID) async throws -> [User] {
