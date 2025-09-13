@@ -137,22 +137,31 @@ struct RegisterView: View {
                         paymentPrice: paymentPrice,
                         priceTitle: priceTitle
                     )
+                    var newBillingParticipants: [BillingParticipant] = []
+                    
+                    for user in users {
+                        let newBillingParticipant = BillingParticipant(
+                            billingId: newBilling.id,
+                            userId: user.id,
+                            groupId: groupId,
+                            isShare: user.isPay
+                        )
+                        newBillingParticipants.append(newBillingParticipant)
+                    }
                     
                     Task {
-                        await saveBilling(billing: newBilling)
-                        billings.append(newBilling)
-                        
-                        for user in users {
-                            let newBillingParticipant = BillingParticipant(
-                                billingId: newBilling.id,
-                                userId: user.id,
-                                groupId: groupId,
-                                isShare: user.isPay
+                        do {
+                            let service = BillingService()
+                            try await service.createBillingWithParticipants(
+                                billing: newBilling,
+                                billingParticipants: newBillingParticipants
                             )
-                            await saveBillingParticipant(billingParticipant: newBillingParticipant)
-                            billingParticipants.append(newBillingParticipant)
+                        } catch {
+                            print("明細登録失敗")
                         }
                         
+                        billings.append(newBilling)
+                        billingParticipants.append(contentsOf: newBillingParticipants)
                         priceTitle = ""
                         paymentPrice = 0
                         dismiss()
