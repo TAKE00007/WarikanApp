@@ -15,7 +15,6 @@ struct CreateGrooupView: View {
     @FocusState private var isUserNameFocused: Bool
     
     @State private var navigateToHome = false
-    @State private var createdGroup: Group?
     
     var body: some View {
         NavigationStack {
@@ -78,7 +77,7 @@ struct CreateGrooupView: View {
                             Task {
                                 do {
                                     let service = GroupService()
-                                    let saved = try await service.createGroupWithUsers(
+                                    let saved: Group = try await service.createGroupWithUsers(
                                         groupName: group.groupName,
                                         users: users
                                     )
