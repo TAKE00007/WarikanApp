@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestore
 
 class User: ObservableObject, Identifiable {
     let id: UUID
