@@ -70,6 +70,16 @@ struct HomeView: View {
                     .padding(.top, 100)
                 }
                 
+                NavigationLink(destination: BillingView()) {
+                    Text("明細を見る")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .frame(width: 350, height: 55)
+                        .foregroundStyle(Color.black)
+                        .background(Color("back"))
+                        .cornerRadius(3)
+                }
+                
                 Button {
                     print("ボタンが押されました")
                 } label: {
