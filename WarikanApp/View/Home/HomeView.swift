@@ -79,18 +79,6 @@ struct HomeView: View {
                         .background(Color("back"))
                         .cornerRadius(3)
                 }
-                
-                Button {
-                    print("ボタンが押されました")
-                } label: {
-                    Text("明細を見る")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .frame(width: 350, height: 55)
-                        .foregroundStyle(Color.black)
-                        .background(Color("back"))
-                        .cornerRadius(3)
-                }
             }
             .padding()
             .toolbar {
