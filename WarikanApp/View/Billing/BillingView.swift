@@ -75,18 +75,6 @@ struct BillingView: View {
     }
 }
 
-struct KashikariListView: View {
-    var body: some View {
-        Text("kashikari")
-    }
-}
-
-struct ShishutuListView: View {
-    var body: some View {
-        Text("shishutu")
-    }
-}
-
 #Preview("BillingView – Light") {
     NavigationStack { BillingView() }
 }
