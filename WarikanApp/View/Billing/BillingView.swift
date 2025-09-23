@@ -22,8 +22,6 @@ struct TopPillTabs: View {
     
     var body: some View {
         ZStack {
-            Capsule()
-                .fill(Color(.systemGray6))
             HStack(spacing: 0) {
                 ForEach(tabs) { tab in
                     Button {
@@ -33,7 +31,6 @@ struct TopPillTabs: View {
                             .font(.system(size: 18, weight: .bold))
                             .frame(maxWidth: .infinity)
                             .frame(height: 56)
-                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(selection == tab ? Color.white : Color.primary)
@@ -49,6 +46,7 @@ struct TopPillTabs: View {
                     .contentShape(Rectangle())
                 }
             }
+            .background(Color(.systemGray6))
             .clipShape(Capsule())
             .padding(6)
         }
@@ -77,14 +75,30 @@ struct BillingView: View {
     }
 }
 
-struct KashikariListView: View {
-    var body: some View {
-        Text("kashikari")
-    }
+#Preview("BillingView – Light") {
+    NavigationStack { BillingView() }
 }
 
-struct ShishutuListView: View {
+// SizeThatFits で最小レイアウトだけを描画（軽量）
+#Preview("TopPillTabs – 貸し借り (SizeThatFits)", traits: .sizeThatFitsLayout) {
+    TopPillTabsPreview(initial: .kashikari)
+        .padding(.horizontal, 20)
+}
+
+// Dark + SizeThatFits を同時指定（ダークはモディファイアで指定）
+#Preview("TopPillTabs – 支出 (Dark, SizeThatFits)", traits: .sizeThatFitsLayout) {
+    TopPillTabsPreview(initial: .shishutu)
+        .padding(.horizontal, 20)
+        .preferredColorScheme(.dark)
+}
+
+// Bindingを持たせるためのラッパー（プレビュー時はアニメーション無効化で軽量化）
+private struct TopPillTabsPreview: View {
+    @State var selection: TopTab
+    init(initial: TopTab) { _selection = State(initialValue: initial) }
     var body: some View {
-        Text("shishutu")
+        TopPillTabs(selection: $selection)
+            // プレビューではアニメーションを切って安定・軽量化
+            .transaction { $0.animation = nil }
     }
 }
