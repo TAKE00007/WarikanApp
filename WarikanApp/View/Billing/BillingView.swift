@@ -55,6 +55,7 @@ struct TopPillTabs: View {
 
 struct BillingView: View {
     @State private var selection: TopTab = .kashikari
+    let users: [User]
     
     var body: some View {
         VStack(spacing: 16) {
@@ -64,9 +65,9 @@ struct BillingView: View {
             VStack(spacing: 0) {
                 switch selection {
                 case .kashikari:
-                    KashikariListView()
+                    KashikariListView(users: users)
                 case .shishutu:
-                    ShishutuListView()
+                    ShishutuListView(users: users)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -75,22 +76,22 @@ struct BillingView: View {
     }
 }
 
-#Preview("BillingView – Light") {
-    NavigationStack { BillingView() }
-}
-
-// SizeThatFits で最小レイアウトだけを描画（軽量）
-#Preview("TopPillTabs – 貸し借り (SizeThatFits)", traits: .sizeThatFitsLayout) {
-    TopPillTabsPreview(initial: .kashikari)
-        .padding(.horizontal, 20)
-}
-
-// Dark + SizeThatFits を同時指定（ダークはモディファイアで指定）
-#Preview("TopPillTabs – 支出 (Dark, SizeThatFits)", traits: .sizeThatFitsLayout) {
-    TopPillTabsPreview(initial: .shishutu)
-        .padding(.horizontal, 20)
-        .preferredColorScheme(.dark)
-}
+//#Preview("BillingView – Light") {
+//    NavigationStack { BillingView() }
+//}
+//
+//// SizeThatFits で最小レイアウトだけを描画（軽量）
+//#Preview("TopPillTabs – 貸し借り (SizeThatFits)", traits: .sizeThatFitsLayout) {
+//    TopPillTabsPreview(initial: .kashikari)
+//        .padding(.horizontal, 20)
+//}
+//
+//// Dark + SizeThatFits を同時指定（ダークはモディファイアで指定）
+//#Preview("TopPillTabs – 支出 (Dark, SizeThatFits)", traits: .sizeThatFitsLayout) {
+//    TopPillTabsPreview(initial: .shishutu)
+//        .padding(.horizontal, 20)
+//        .preferredColorScheme(.dark)
+//}
 
 // Bindingを持たせるためのラッパー（プレビュー時はアニメーション無効化で軽量化）
 private struct TopPillTabsPreview: View {
