@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct KashikariListView: View {
-    let users: [User] = [
-        User(id: UUID(), groupId: UUID(), userName: "take", isPay: true),
-        User(id: UUID(), groupId: UUID(), userName: "sho", isPay: false)
-    ]
+//    let users: [User] = [
+//        User(id: UUID(), groupId: UUID(), userName: "take", isPay: true),
+//        User(id: UUID(), groupId: UUID(), userName: "sho", isPay: false)
+//    ]
+    let users: [User]
     let prices: [Int] = [
         20081,-20081
     ]
@@ -50,6 +51,6 @@ struct KashikariListView: View {
     }
 }
 
-#Preview {
-    KashikariListView()
-}
+//#Preview {
+//    KashikariListView()
+//}
