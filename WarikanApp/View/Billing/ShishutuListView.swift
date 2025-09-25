@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct ShishutuListView: View {
-    let userList: [(String, Int)]
+    let shishutuList: [(String, Int)]
     var totalAmount: Int {
-        userList.map { $0.1 }.reduce(0, +)
+        shishutuList.map { $0.1 }.reduce(0, +)
     }
     
     var body: some View {
         VStack {
             VStack {
-                ForEach (userList, id: \.0) { (name, amount) in
+                ForEach (shishutuList, id: \.0) { (name, amount) in
                     HStack {
                         Text(name)
                         Spacer()
-                        Text("\(amount)")
+                        Text("¥\(amount)")
                     }
                     .padding()
                     Divider()
@@ -32,7 +32,7 @@ struct ShishutuListView: View {
                 Text("グループ支出合計")
                     .bold()
                 Spacer()
-                Text("\(totalAmount)")
+                Text("¥\(totalAmount)")
                     .bold()
             }
             .padding()
