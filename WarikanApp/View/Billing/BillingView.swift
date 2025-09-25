@@ -59,8 +59,12 @@ struct BillingView: View {
     let billings: [Billing]
     let billingParticipants: [BillingParticipant]
     
-    var results: [(String, Int)] {
+    var shishutuList: [(String, Int)] {
         shishutu(users: users, billings: billings, billingParticipants: billingParticipants)
+    }
+    
+    var kashikariList: [(String, Int)] {
+        kashikari(users: users, billings: billings, billingParticipants: billingParticipants)
     }
     
     var body: some View {
@@ -71,16 +75,12 @@ struct BillingView: View {
             VStack(spacing: 0) {
                 switch selection {
                 case .kashikari:
-                    KashikariListView(users: users)
+                    KashikariListView(kashikariList: kashikariList)
                 case .shishutu:
-                    ShishutuListView(userList: results)
+                    ShishutuListView(shishutuList: shishutuList)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            
-            ForEach(results, id: \.0) { (name, amount)  in
-                Text("\(name):¥\(amount)")
-            }
         }
         .navigationTitle("Walica")
     }
@@ -102,6 +102,41 @@ struct BillingView: View {
             
             for participant in sharers {
                 amountByUser[participant.userId, default: 0] += baseShare
+            }
+        }
+        
+        // (userName, amount) に変換。名前不明は "Unknown" とする
+        let results: [(String, Int)] = amountByUser.map { (userId, amount) in
+            let name = users
+                .first { $0.id == userId }
+                .map { $0.userName } ?? "Unknown"
+            return (name, amount)
+        }
+        
+        return results
+    }
+    
+    private func kashikari(users: [User], billings: [Billing], billingParticipants: [BillingParticipant]) -> [(String, Int)] {
+        
+        // userId -> 合計負担額
+        var amountByUser: [UUID: Int] = [:]
+        
+        for billing in billings {
+            // 対象の明細に紐づく参加者
+            let participants = billingParticipants.filter { $0.billingId == billing.id }
+            // 割り勘対象者のみ
+            let sharers = participants.filter { $0.isShare }
+            let count = sharers.count
+            
+            // 余りは切り捨て
+            let baseShare = billing.paymentPrice / count
+            
+            for participant in sharers {
+                if participant.userId == billing.userId {
+                    amountByUser[participant.userId, default: 0] += billing.paymentPrice - baseShare
+                } else {
+                    amountByUser[participant.userId, default: 0] -= baseShare
+                }
             }
         }
         
