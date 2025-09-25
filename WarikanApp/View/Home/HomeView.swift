@@ -70,7 +70,7 @@ struct HomeView: View {
                     .padding(.top, 100)
                 }
                 
-                NavigationLink(destination: BillingView(users: users)) {
+                NavigationLink(destination: BillingView(users: users, billings: billings, billingParticipants: billingParticipants)) {
                     Text("明細を見る")
                         .font(.headline)
                         .fontWeight(.bold)

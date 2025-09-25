@@ -56,6 +56,12 @@ struct TopPillTabs: View {
 struct BillingView: View {
     @State private var selection: TopTab = .kashikari
     let users: [User]
+    let billings: [Billing]
+    let billingParticipants: [BillingParticipant]
+    
+    var results: [(String, Int)] {
+        shishutu(users: users, billings: billings, billingParticipants: billingParticipants)
+    }
     
     var body: some View {
         VStack(spacing: 16) {
@@ -67,12 +73,47 @@ struct BillingView: View {
                 case .kashikari:
                     KashikariListView(users: users)
                 case .shishutu:
-                    ShishutuListView(users: users)
+                    ShishutuListView(userList: results)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            
+            ForEach(results, id: \.0) { (name, amount)  in
+                Text("\(name):¥\(amount)")
+            }
         }
         .navigationTitle("Walica")
+    }
+    
+    private func shishutu(users: [User], billings: [Billing], billingParticipants: [BillingParticipant]) -> [(String, Int)] {
+        
+        // userId -> 合計負担額
+        var amountByUser: [UUID: Int] = [:]
+        
+        for billing in billings {
+            // 対象の明細に紐づく参加者
+            let participants = billingParticipants.filter { $0.billingId == billing.id }
+            // 割り勘対象者のみ
+            let sharers = participants.filter { $0.isShare }
+            let count = sharers.count
+            
+            // 余りは切り捨て
+            let baseShare = billing.paymentPrice / count
+            
+            for participant in sharers {
+                amountByUser[participant.userId, default: 0] += baseShare
+            }
+        }
+        
+        // (userName, amount) に変換。名前不明は "Unknown" とする
+        let results: [(String, Int)] = amountByUser.map { (userId, amount) in
+            let name = users
+                .first { $0.id == userId }
+                .map { $0.userName } ?? "Unknown"
+            return (name, amount)
+        }
+        
+        return results
     }
 }
 

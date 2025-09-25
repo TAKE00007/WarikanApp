@@ -8,31 +8,23 @@
 import SwiftUI
 
 struct ShishutuListView: View {
-//    let users: [User] = [
-//        User(id: UUID(), groupId: UUID(), userName: "take", isPay: true),
-//        User(id: UUID(), groupId: UUID(), userName: "sho", isPay: false)
-//    ]
-    let users: [User]
-    let prices: [Int] = [
-        20081,-20081
-    ]
+    let userList: [(String, Int)]
+    var totalAmount: Int {
+        userList.map { $0.1 }.reduce(0, +)
+    }
     
     var body: some View {
         VStack {
             VStack {
-                ForEach(0..<min(users.count, prices.count), id: \.self) { i in
-                    let user = users[i]
-                    let price = prices[i]
-                    
+                ForEach (userList, id: \.0) { (name, amount) in
                     HStack {
-                        Text(user.userName)
+                        Text(name)
                         Spacer()
-                        Text("\(price)")
+                        Text("\(amount)")
                     }
                     .padding()
                     Divider()
                 }
-                
             }
             .listStyle(.plain)
             
@@ -40,7 +32,7 @@ struct ShishutuListView: View {
                 Text("グループ支出合計")
                     .bold()
                 Spacer()
-                Text("¥277919")
+                Text("\(totalAmount)")
                     .bold()
             }
             .padding()
