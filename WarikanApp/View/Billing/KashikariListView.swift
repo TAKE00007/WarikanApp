@@ -8,27 +8,17 @@
 import SwiftUI
 
 struct KashikariListView: View {
-//    let users: [User] = [
-//        User(id: UUID(), groupId: UUID(), userName: "take", isPay: true),
-//        User(id: UUID(), groupId: UUID(), userName: "sho", isPay: false)
-//    ]
-    let users: [User]
-    let prices: [Int] = [
-        20081,-20081
-    ]
+    let kashikariList: [(String, Int)]
     
     var body: some View {
         VStack { 
             VStack {
-                ForEach(0..<min(users.count, prices.count), id: \.self) { i in
-                    let user = users[i]
-                    let price = prices[i]
-                    
+                ForEach(kashikariList, id: \.0) { (name, amount) in
                     HStack {
-                        Text(user.userName)
+                        Text(name)
                         Spacer()
-                        Text("\(price < 0 ? "-" : "")¥\(abs(price))")
-                            .foregroundStyle(price >= 0 ? .blue : .red)
+                        Text("\(amount < 0 ? "-" : "")¥\(abs(amount))")
+                            .foregroundStyle(amount >= 0 ? .blue : .red)
                     }
                     .padding()
                     Divider()

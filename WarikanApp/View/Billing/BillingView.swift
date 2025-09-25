@@ -56,6 +56,16 @@ struct TopPillTabs: View {
 struct BillingView: View {
     @State private var selection: TopTab = .kashikari
     let users: [User]
+    let billings: [Billing]
+    let billingParticipants: [BillingParticipant]
+    
+    var shishutuList: [(String, Int)] {
+        shishutu(users: users, billings: billings, billingParticipants: billingParticipants)
+    }
+    
+    var kashikariList: [(String, Int)] {
+        kashikari(users: users, billings: billings, billingParticipants: billingParticipants)
+    }
     
     var body: some View {
         VStack(spacing: 16) {
@@ -65,14 +75,68 @@ struct BillingView: View {
             VStack(spacing: 0) {
                 switch selection {
                 case .kashikari:
-                    KashikariListView(users: users)
+                    KashikariListView(kashikariList: kashikariList)
                 case .shishutu:
-                    ShishutuListView(users: users)
+                    ShishutuListView(shishutuList: shishutuList)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .navigationTitle("Walica")
+    }
+    
+    private func shishutu(users: [User], billings: [Billing], billingParticipants: [BillingParticipant]) -> [(String, Int)] {
+        var amountByUser: [UUID: Int] = [:]
+        
+        for billing in billings {
+            let participants = billingParticipants.filter { $0.billingId == billing.id }
+            let sharers = participants.filter { $0.isShare }
+            let count = sharers.count
+            
+            let baseShare = billing.paymentPrice / count
+            
+            for participant in sharers {
+                amountByUser[participant.userId, default: 0] += baseShare
+            }
+        }
+        
+        let results: [(String, Int)] = amountByUser.map { (userId, amount) in
+            let name = users
+                .first { $0.id == userId }
+                .map { $0.userName } ?? "Unknown"
+            return (name, amount)
+        }
+        
+        return results
+    }
+    
+    private func kashikari(users: [User], billings: [Billing], billingParticipants: [BillingParticipant]) -> [(String, Int)] {
+        var amountByUser: [UUID: Int] = [:]
+        
+        for billing in billings {
+            let participants = billingParticipants.filter { $0.billingId == billing.id }
+            let sharers = participants.filter { $0.isShare }
+            let count = sharers.count
+
+            let baseShare = billing.paymentPrice / count
+            
+            for participant in sharers {
+                if participant.userId == billing.userId {
+                    amountByUser[participant.userId, default: 0] += billing.paymentPrice - baseShare
+                } else {
+                    amountByUser[participant.userId, default: 0] -= baseShare
+                }
+            }
+        }
+
+        let results: [(String, Int)] = amountByUser.map { (userId, amount) in
+            let name = users
+                .first { $0.id == userId }
+                .map { $0.userName } ?? "Unknown"
+            return (name, amount)
+        }
+        
+        return results
     }
 }
 
