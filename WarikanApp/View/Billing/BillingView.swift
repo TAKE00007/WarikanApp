@@ -86,18 +86,13 @@ struct BillingView: View {
     }
     
     private func shishutu(users: [User], billings: [Billing], billingParticipants: [BillingParticipant]) -> [(String, Int)] {
-        
-        // userId -> 合計負担額
         var amountByUser: [UUID: Int] = [:]
         
         for billing in billings {
-            // 対象の明細に紐づく参加者
             let participants = billingParticipants.filter { $0.billingId == billing.id }
-            // 割り勘対象者のみ
             let sharers = participants.filter { $0.isShare }
             let count = sharers.count
             
-            // 余りは切り捨て
             let baseShare = billing.paymentPrice / count
             
             for participant in sharers {
@@ -105,7 +100,6 @@ struct BillingView: View {
             }
         }
         
-        // (userName, amount) に変換。名前不明は "Unknown" とする
         let results: [(String, Int)] = amountByUser.map { (userId, amount) in
             let name = users
                 .first { $0.id == userId }
@@ -117,18 +111,13 @@ struct BillingView: View {
     }
     
     private func kashikari(users: [User], billings: [Billing], billingParticipants: [BillingParticipant]) -> [(String, Int)] {
-        
-        // userId -> 合計負担額
         var amountByUser: [UUID: Int] = [:]
         
         for billing in billings {
-            // 対象の明細に紐づく参加者
             let participants = billingParticipants.filter { $0.billingId == billing.id }
-            // 割り勘対象者のみ
             let sharers = participants.filter { $0.isShare }
             let count = sharers.count
-            
-            // 余りは切り捨て
+
             let baseShare = billing.paymentPrice / count
             
             for participant in sharers {
@@ -139,8 +128,7 @@ struct BillingView: View {
                 }
             }
         }
-        
-        // (userName, amount) に変換。名前不明は "Unknown" とする
+
         let results: [(String, Int)] = amountByUser.map { (userId, amount) in
             let name = users
                 .first { $0.id == userId }
