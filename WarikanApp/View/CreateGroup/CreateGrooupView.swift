@@ -117,7 +117,6 @@ struct CreateGrooupView: View {
                     .toolbarBackground(.visible, for: .navigationBar)
                 }
             }
-            .navigationBarBackButtonHidden(true)
         }
     }
 }

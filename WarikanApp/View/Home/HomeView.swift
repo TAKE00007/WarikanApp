@@ -92,7 +92,6 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("main"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .navigationBarBackButtonHidden(true)
         }
         .task {
             do {
