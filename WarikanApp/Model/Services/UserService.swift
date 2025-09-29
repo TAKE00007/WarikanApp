@@ -20,6 +20,12 @@ struct UserService {
         
         return homeData(users: users, billings: billings, billingParticipants: billingParticipants)
     }
+    
+    func addUser(user: User) async throws {
+        try await userRepository.addUser(user)
+    }
+    
+    
 }
 
 struct homeData {

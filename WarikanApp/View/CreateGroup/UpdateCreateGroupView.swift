@@ -52,6 +52,14 @@ struct UpdateCreateGroupView: View {
                             Button {
                                 let newUser = User(groupId: group.id, userName: user.userName)
                                 users.append(newUser)
+                                Task {
+                                    do {
+                                        let service = UserService()
+                                        try await service.addUser(user: newUser)
+                                    } catch {
+                                        print("ユーザー更新失敗")
+                                    }
+                                }
                                 user.userName = ""
                             } label: {
                                 Text("追加")
