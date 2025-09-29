@@ -15,4 +15,8 @@ struct BillingService {
         try await billingRepository.addBilling(billing)
         try await billingParticipantRepository.addBillingParticipants(billingParticipants)
     }
+    
+    func updateBillingWithParticipants(billing: Billing, billingParticipants: [BillingParticipant]) async throws {
+        try await billingRepository.updateBillingWithParticipants(billing: billing, participants: billingParticipants)
+    }
 }
