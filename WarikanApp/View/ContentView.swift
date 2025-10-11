@@ -8,22 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var groups: [Group] = []
     var body: some View {
         NavigationStack {
             ZStack {
                 Color("main")
                     .edgesIgnoringSafeArea(.all)
-                VStack {
-                    Text("""
+                ScrollView(.vertical, showsIndicators: true) {
+                    VStack {
+                        Text("""
                         もう、誰が誰に
                         何円返せばいいんだっけ
                         で迷わない。
                         """)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(20)
-                    
-                    Text("""
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(20)
+                        
+                        Text("""
                         友達と旅行で、レンタカーや高速道路代など、
                         お金の貸し借りをした時、最終的に誰が誰に何
                         円返すべきか混乱することはありませんか？
@@ -31,35 +33,79 @@ struct ContentView: View {
                         さをシンプルに解決してくれる無料のサービス
                         です。
                         """)
-                    .font(.
-                          headline)
-                    .padding(20)
-                    
-                    NavigationLink(destination: CreateGrooupView()) {
-                        Text("はじめる")
-                            .bold()
-                            .padding(.horizontal, 140)
-                            .padding(.vertical, 12)
-                            .foregroundStyle(Color("main"))
-                            .background(Color.white)
-                            .cornerRadius(25)
+                        .font(.
+                              headline)
+                        .padding(20)
+                        
+                        NavigationLink(destination: CreateGrooupView()) {
+                            Text("はじめる")
+                                .bold()
+                                .padding(.horizontal, 140)
+                                .padding(.vertical, 12)
+                                .foregroundStyle(Color("main"))
+                                .background(Color.white)
+                                .cornerRadius(25)
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Text("最近のグループ")
+                                .font(.title3)
+                                .padding(.top, 30)
+                                .padding(.bottom, 10)
+                                .padding(.horizontal, 10)
+                            Spacer()
+                        }
+                        ForEach($groups) { $group in
+                            NavigationLink(destination: HomeView(group: $group)
+                            ) {
+                                HStack {
+                                    Text($group.wrappedValue.groupName)
+                                        .font(.headline)
+                                        .foregroundStyle(Color.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .foregroundStyle(Color.gray)
+                                }
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
+                                .padding(.horizontal, 10)
+                            }
+                        }
+                        
+                        
                     }
-                    
-                    Spacer()
-                    
-                }
-                .foregroundStyle(Color.white)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        Text("Walican")
-                            .foregroundColor(Color.white)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                    .foregroundStyle(Color.white)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarBackground(Color("main"), for: .navigationBar)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text("Walican")
+                                .foregroundColor(Color.white)
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                        }
+                    }
+                    .task {
+                        await loadGroups()
                     }
                 }
             }
         }
-        
+    }
+    
+    private func loadGroups() async {
+        let repo = GroupRepository()
+        do {
+            let fetched = try await repo.fetchAllGroups()
+            groups = fetched
+        } catch {
+            print("グループ取得失敗: \(error.localizedDescription)")
+        }
     }
 }
 

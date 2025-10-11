@@ -14,6 +14,8 @@ struct UpdateRegisterView: View {
     @State private var userId: UUID?
     @State private var paymentTitle = ""
     @State private var paymentText = ""
+    @State private var isSaving = false
+    @State private var errorMessage: String?
     let users: [User]
     @Binding var billing: Billing
     @Binding var billings: [Billing]
@@ -124,28 +126,47 @@ struct UpdateRegisterView: View {
                 
                 //登録ボタン
                 Button {
-                    //TODO: 払う人が払わなくなった時に該当するbillingParticipantを削除する必要がある
-                    for billingParticipant in billingParticipants {
-                        if billingParticipant.billingId == billing.id {
-                            billingParticipant.isShare = users.first { $0.id == billingParticipant.userId }?.isPay ?? true
-                        }
-                    }
+                    billing.userId = userId ?? billing.userId
                     billing.priceTitle = paymentTitle
                     billing.paymentPrice = Int(paymentText) ?? billing.paymentPrice
-                    billing.userId = userId!
-                    billing.createdAt = Date()
-                    print("ボタンが押されました")
-                    dismiss()
+                    
+                    let targets: [BillingParticipant] = billingParticipants
+                        .filter { $0.billingId == billing.id }
+                        .map { part in
+                            part.isShare = users.first { $0.id == part.userId }?.isPay ?? true
+                            return part
+                        }
+                    
+                    //払う人(billing.userId)が選択されているけどチェックが外れている場合(billingParticipants.isShare=falseを排除
+                    if let targetIsShare = billingParticipants
+                        .first (where: { $0.userId == billing.userId && $0.billingId == billing.id })?.isShare, targetIsShare == false {
+                        errorMessage = "支払い者のチェックが外れています"; return
+                        }
+                    
+                    
+                    Task {
+                        do {
+                            let service = BillingService()
+                            try await service.updateBillingWithParticipants(
+                                billing: billing,
+                                billingParticipants: targets
+                            )
+                            dismiss()
+                        } catch {
+                            print("明細更新失敗")
+                        }
+                    }
                 } label: {
                     Text("登録")
-                        .font(.headline)
-                        .fontWeight(.bold)
+                        .font(.headline).fontWeight(.bold)
                         .frame(width: 350, height: 55)
                         .foregroundStyle(Color.white)
                         .background(Color("main"))
                         .cornerRadius(3)
                 }
                 .padding(.top, 40)
+                .disabled(isSaving)
+                
                 //戻るボタン
                 Button {
                     dismiss()
@@ -163,6 +184,16 @@ struct UpdateRegisterView: View {
             .onAppear {
                 paymentTitle = billing.priceTitle
                 paymentText = String(billing.paymentPrice)
+                
+                //billingParticipantsからbillingIdと同じものを抽出
+                //それぞれのisPayをuser.isPayに代入
+                let targetBillingParticipants = billingParticipants
+                    .filter { $0.billingId == billing.id }
+                
+                for user in users {
+                    let userPay = targetBillingParticipants.first { $0.userId == user.id }?.isShare ?? false
+                    user.isPay = userPay
+                }
                 
                 if let index = users.firstIndex(where: { $0.id == billing.userId }) {
                     selectedIndex = index

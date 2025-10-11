@@ -9,8 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Binding var group: Group
-    @Binding var users: [User]
-    
+    @State var users: [User] = []
     @State var billings: [Billing] = []
     @State var billingParticipants: [BillingParticipant] = []
     
@@ -71,9 +70,7 @@ struct HomeView: View {
                     .padding(.top, 100)
                 }
                 
-                Button {
-                    print("ボタンが押されました")
-                } label: {
+                NavigationLink(destination: BillingView(users: users, billings: billings, billingParticipants: billingParticipants)) {
                     Text("明細を見る")
                         .font(.headline)
                         .fontWeight(.bold)
@@ -95,10 +92,17 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("main"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .navigationBarBackButtonHidden(true)
         }
-
-
+        .task {
+            do {
+                let homeData = try await UserService().loadUsersWithBillings(groupId: group.id)
+                users = homeData.users
+                billings = homeData.billings
+                billingParticipants = homeData.billingParticipants
+            } catch {
+                print("読み込み失敗: \(error)")
+            }
+        }
     }
 }
 

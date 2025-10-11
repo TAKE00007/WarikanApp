@@ -8,10 +8,11 @@
 import Foundation
 
 struct Group: Identifiable {
-    let id = UUID()
+    let id: UUID
     var groupName: String
     
-    init(groupName: String) {
+    init(id: UUID = UUID(), groupName: String) {
+        self.id = id
         self.groupName = groupName
     }
 }

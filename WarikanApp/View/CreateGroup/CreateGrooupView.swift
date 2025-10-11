@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct CreateGrooupView: View {
-    @StateObject private var user = User(userName: "")
+    @StateObject private var user = User(groupId: UUID(), userName: "")
     @State private var group = Group(groupName: "")
     @State private var userName: String = ""
     @State private var users: [User] = []
     @FocusState private var isUserNameFocused: Bool
+    
+    @State private var navigateToHome = false
     
     var body: some View {
         NavigationStack {
@@ -45,7 +47,7 @@ struct CreateGrooupView: View {
                             
                             Button {
                                 if !userName.isEmpty {
-                                    let newUser = User(userName: userName)
+                                    let newUser = User(groupId: group.id, userName: userName)
                                     users.append(newUser)
                                     userName = ""
                                     isUserNameFocused = false
@@ -70,7 +72,22 @@ struct CreateGrooupView: View {
                         //名前一覧
                         PreviewUserName(users: $users)
                         
-                        NavigationLink(destination: HomeView(group: $group, users: $users)) {
+                        //グループ作成
+                        Button {
+                            Task {
+                                do {
+                                    let service = GroupService()
+                                    let saved: Group = try await service.createGroupWithUsers(
+                                        groupName: group.groupName,
+                                        users: users
+                                    )
+                                    group = saved
+                                    navigateToHome = true
+                                } catch {
+                                    print("グループ作成失敗")
+                                }
+                            }
+                        } label: {
                             Text("グループを作成")
                                 .bold()
                                 .padding(.horizontal, 120)
@@ -80,8 +97,11 @@ struct CreateGrooupView: View {
                                 .cornerRadius(3)
                         }
                         .padding(.top, 100)
-
                         
+                        //画面遷移
+                        .navigationDestination(isPresented: $navigateToHome) {
+                            HomeView(group: $group)
+                        }
                     }
                     .padding()
                     .toolbar {
@@ -97,7 +117,6 @@ struct CreateGrooupView: View {
                     .toolbarBackground(.visible, for: .navigationBar)
                 }
             }
-            .navigationBarBackButtonHidden(true)
         }
     }
 }

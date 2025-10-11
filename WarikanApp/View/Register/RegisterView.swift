@@ -16,6 +16,7 @@ struct RegisterView: View {
     @State private var priceTitle = ""
     @State private var paymentPrice = 0
     @State private var userId: UUID?
+    @State private var errorMessage: String?
     @Binding var users: [User]
     @Binding var billings: [Billing]
     @Binding var billingParticipants: [BillingParticipant]
@@ -105,7 +106,7 @@ struct RegisterView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                         .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
-                    TextField("4800", value: $paymentPrice, formatter: NumberFormatter())
+                    TextField("4800", value: $paymentPrice, formatter: numberFormatter)
                         .padding(.vertical, 15)
                         .padding(.leading, 15)
                         .background(Color("background"))
@@ -125,25 +126,46 @@ struct RegisterView: View {
                 
                 //登録ボタン
                 Button {
+                    guard let userId else {
+                        errorMessage = "ユーザーが選択されていません"
+                        return
+                    }
+                    
                     let newBilling = Billing(
-                        userId: userId!,
+                        userId: userId,
                         groupId: groupId,
                         paymentPrice: paymentPrice,
                         priceTitle: priceTitle
                     )
+                    var newBillingParticipants: [BillingParticipant] = []
+                    
                     for user in users {
                         let newBillingParticipant = BillingParticipant(
                             billingId: newBilling.id,
                             userId: user.id,
+                            groupId: groupId,
                             isShare: user.isPay
                         )
-                        billingParticipants.append(newBillingParticipant)
+                        newBillingParticipants.append(newBillingParticipant)
                     }
-                    billings.append(newBilling)
-                    priceTitle = ""
-                    paymentPrice = 0
-                    print("ボタンが押されました")
-                    dismiss()
+                    
+                    Task {
+                        do {
+                            let service = BillingService()
+                            try await service.createBillingWithParticipants(
+                                billing: newBilling,
+                                billingParticipants: newBillingParticipants
+                            )
+                        } catch {
+                            print("明細登録失敗")
+                        }
+                        
+                        billings.append(newBilling)
+                        billingParticipants.append(contentsOf: newBillingParticipants)
+                        priceTitle = ""
+                        paymentPrice = 0
+                        dismiss()
+                    }
                 } label: {
                     Text("登録")
                         .font(.headline)
@@ -154,6 +176,16 @@ struct RegisterView: View {
                         .cornerRadius(3)
                 }
                 .padding(.top, 40)
+                .alert(isPresented: .constant(errorMessage != nil)) {
+                    Alert(
+                        title: Text("エラー"),
+                        message: Text(errorMessage ?? ""),
+                        dismissButton: .default(Text("OK")) {
+                            errorMessage = nil
+                        }
+                    )
+                }
+                
                 //戻るボタン
                 Button {
                     dismiss()
@@ -187,30 +219,12 @@ struct RegisterView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
     }
-}
-
-struct UserRow: View {
-    @ObservedObject var user: User
     
-    var body: some View {
-        HStack {
-            Button {
-                user.isPay.toggle()
-            } label: {
-                if user.isPay {
-                    Image(systemName: "checkmark.square.fill")
-                        .foregroundColor(Color("main"))
-                } else {
-                    Image(systemName: "square")
-                        .foregroundColor(Color("back"))
-                }
-            }
-            .fontWeight(.bold)
-            .font(.title)
-            Text(user.userName)
-        }
-        .padding()
-    }
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
 }
 
 //#Preview {

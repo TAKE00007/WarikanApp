@@ -11,7 +11,7 @@ struct UpdateCreateGroupView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var group: Group
     @Binding var users: [User]
-    @StateObject private var user = User(userName: "")
+    @StateObject private var user = User(groupId: UUID(), userName: "")
 
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 400), spacing: 10,),
@@ -50,8 +50,16 @@ struct UpdateCreateGroupView: View {
                             
                             
                             Button {
-                                let newUser = User(userName: user.userName)
+                                let newUser = User(groupId: group.id, userName: user.userName)
                                 users.append(newUser)
+                                Task {
+                                    do {
+                                        let service = UserService()
+                                        try await service.addUser(user: newUser)
+                                    } catch {
+                                        print("ユーザー更新失敗")
+                                    }
+                                }
                                 user.userName = ""
                             } label: {
                                 Text("追加")
